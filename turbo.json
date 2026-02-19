@@ -1,0 +1,41 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "globalDependencies": ["tsconfig.base.json"],
+  "ui": "stream",
+  "tasks": {
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**", ".next/**"],
+      "env": ["NODE_ENV", "NEXT_PUBLIC_*"]
+    },
+    "dev": {
+      "cache": false,
+      "persistent": true
+    },
+    "lint": {
+      "dependsOn": ["^build"],
+      "cache": true
+    },
+    "typecheck": {
+      "dependsOn": ["^build"],
+      "cache": true
+    },
+    "test:unit": {
+      "dependsOn": ["^build"],
+      "cache": false,
+      "env": ["NODE_ENV"]
+    },
+    "test:integration": {
+      "dependsOn": ["^build"],
+      "cache": false,
+      "env": ["REDIS_URL", "MONGODB_URI", "NODE_ENV"]
+    },
+    "test:smoke": {
+      "cache": false,
+      "env": ["BASE_URL", "API_KEY"]
+    },
+    "clean": {
+      "cache": false
+    }
+  }
+}

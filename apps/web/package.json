@@ -1,0 +1,13 @@
+{
+  "name": "@audex/web",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "echo 'Web app not initialized yet'",
+    "build": "echo 'Web app not initialized yet'",
+    "typecheck": "echo 'Web app not initialized yet'",
+    "lint": "echo 'Web app not initialized yet'",
+    "clean": "rm -rf .next"
+  }
+}
