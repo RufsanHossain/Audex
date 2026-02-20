@@ -28,10 +28,10 @@
     "test:integration": "turbo test:integration",
     "test:smoke": "turbo test:smoke",
     "clean": "turbo clean && rm -rf node_modules",
-    "db:migrate:up": "tsx packages/db/src/migrations/cli.ts up",
-    "db:migrate:down": "tsx packages/db/src/migrations/cli.ts down",
-    "db:migrate:status": "tsx packages/db/src/migrations/cli.ts status",
-    "db:seed:staging": "tsx packages/db/src/seed/staging-seed.ts",
+    "db:migrate:up": "tsx --env-file=.env.local packages/db/src/cli.ts migrate up",
+    "db:migrate:down": "tsx --env-file=.env.local packages/db/src/cli.ts migrate down",
+    "db:migrate:status": "tsx --env-file=.env.local packages/db/src/cli.ts migrate status",
+    "db:seed": "tsx --env-file=.env.local packages/db/src/cli.ts seed",
     "prepare": "husky"
   },
   "devDependencies": {

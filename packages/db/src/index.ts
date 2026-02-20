@@ -38,3 +38,8 @@ export { User } from "./models/user.model.js";
 export type { IUserDoc } from "./models/user.model.js";
 export { Webhook } from "./models/webhook.model.js";
 export type { IWebhookDoc } from "./models/webhook.model.js";
+
+// ─── Migrations ─────────────────────────────────────────────────────────────
+// ─── Migrations ─────────────────────────────────────────────────────────────
+export { MigrationRunner, migrations } from "./migrations/index.js";
+export type { Migration as MigrationDefinition, MigrationRecord } from "./migrations/types.js";

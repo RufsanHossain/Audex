@@ -1,0 +1,144 @@
+import type { Migration } from "../types.js";
+import type { mongo } from "mongoose";
+type Db = mongo.Db;
+
+export const migration: Migration = {
+  version: "20260219000000",
+  description: "Create initial collection indexes",
+
+  async up(db: Db): Promise<void> {
+    // ── Users ─────────────────────────────────────────────────────────────
+    await db
+      .collection("users")
+      .createIndex({ email: 1 }, { unique: true, name: "idx_users_email" });
+    await db.collection("users").createIndex(
+      { "plan.stripeCustomerId": 1 },
+      {
+        unique: true,
+        sparse: true,
+        name: "idx_users_stripe_customer",
+      },
+    );
+    await db
+      .collection("users")
+      .createIndex({ role: 1, isActive: 1 }, { name: "idx_users_role_active" });
+    await db.collection("users").createIndex({ createdAt: -1 }, { name: "idx_users_created" });
+
+    // ── Reports ───────────────────────────────────────────────────────────
+    await db
+      .collection("reports")
+      .createIndex({ userId: 1, createdAt: -1 }, { name: "idx_reports_user_created" });
+    await db
+      .collection("reports")
+      .createIndex({ status: 1, createdAt: -1 }, { name: "idx_reports_status_created" });
+    await db
+      .collection("reports")
+      .createIndex(
+        { projectId: 1, createdAt: -1 },
+        { sparse: true, name: "idx_reports_project_created" },
+      );
+    await db.collection("reports").createIndex(
+      { "metadata.shareSlug": 1 },
+      {
+        unique: true,
+        sparse: true,
+        name: "idx_reports_share_slug",
+      },
+    );
+    await db
+      .collection("reports")
+      .createIndex({ expiresAt: 1 }, { expireAfterSeconds: 0, name: "idx_reports_ttl" });
+
+    // ── Projects ──────────────────────────────────────────────────────────
+    await db
+      .collection("projects")
+      .createIndex({ userId: 1, slug: 1 }, { unique: true, name: "idx_projects_user_slug" });
+    await db
+      .collection("projects")
+      .createIndex({ userId: 1, createdAt: -1 }, { name: "idx_projects_user_created" });
+
+    // ── API Keys ──────────────────────────────────────────────────────────
+    await db
+      .collection("apiKeys")
+      .createIndex({ keyHash: 1 }, { unique: true, name: "idx_apikeys_hash" });
+    await db
+      .collection("apiKeys")
+      .createIndex({ userId: 1, isActive: 1 }, { name: "idx_apikeys_user_active" });
+
+    // ── Subscriptions ─────────────────────────────────────────────────────
+    await db
+      .collection("subscriptions")
+      .createIndex({ userId: 1 }, { unique: true, name: "idx_subscriptions_user" });
+    await db.collection("subscriptions").createIndex(
+      { stripeSubscriptionId: 1 },
+      {
+        unique: true,
+        sparse: true,
+        name: "idx_subscriptions_stripe",
+      },
+    );
+
+    // ── Webhooks ──────────────────────────────────────────────────────────
+    await db.collection("webhooks").createIndex({ userId: 1 }, { name: "idx_webhooks_user" });
+
+    // ── Notifications ─────────────────────────────────────────────────────
+    await db
+      .collection("notifications")
+      .createIndex(
+        { userId: 1, isRead: 1, createdAt: -1 },
+        { name: "idx_notifications_user_read" },
+      );
+    await db.collection("notifications").createIndex(
+      { createdAt: 1 },
+      {
+        expireAfterSeconds: 90 * 24 * 60 * 60, // 90 days
+        name: "idx_notifications_ttl",
+      },
+    );
+
+    // ── Audit Logs ────────────────────────────────────────────────────────
+    await db
+      .collection("auditLogs")
+      .createIndex({ userId: 1, action: 1, timestamp: -1 }, { name: "idx_auditlogs_user_action" });
+    await db.collection("auditLogs").createIndex(
+      { timestamp: 1 },
+      {
+        expireAfterSeconds: 90 * 24 * 60 * 60, // 90 days
+        name: "idx_auditlogs_ttl",
+      },
+    );
+  },
+
+  async down(db: Db): Promise<void> {
+    const drops: [string, string][] = [
+      ["users", "idx_users_email"],
+      ["users", "idx_users_stripe_customer"],
+      ["users", "idx_users_role_active"],
+      ["users", "idx_users_created"],
+      ["reports", "idx_reports_user_created"],
+      ["reports", "idx_reports_status_created"],
+      ["reports", "idx_reports_project_created"],
+      ["reports", "idx_reports_share_slug"],
+      ["reports", "idx_reports_ttl"],
+      ["projects", "idx_projects_user_slug"],
+      ["projects", "idx_projects_user_created"],
+      ["apiKeys", "idx_apikeys_hash"],
+      ["apiKeys", "idx_apikeys_user_active"],
+      ["subscriptions", "idx_subscriptions_user"],
+      ["subscriptions", "idx_subscriptions_stripe"],
+      ["webhooks", "idx_webhooks_user"],
+      ["notifications", "idx_notifications_user_read"],
+      ["notifications", "idx_notifications_ttl"],
+      ["auditLogs", "idx_auditlogs_user_action"],
+      ["auditLogs", "idx_auditlogs_ttl"],
+    ];
+
+    for (const [collection, index] of drops) {
+      try {
+        await db.collection(collection).dropIndex(index);
+      } catch {
+        // Index may not exist — safe to ignore
+      }
+    }
+  },
+};
