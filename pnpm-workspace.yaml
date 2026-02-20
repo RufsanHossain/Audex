@@ -3,10 +3,18 @@ packages:
   - packages/*
 
 catalog:
-  zod: ^3.25.76
-  mongodb: ^9.2.1 # match the version mongoose uses
+  "@types/bcryptjs": ^2.4.6
+  bcryptjs: ^3.0.2
   dotenv-cli: ^8.0.0
+  mongodb: ^9.2.1
+  mongoose: ^9.2.1
+  next: ^16.1.6
+  next-auth: ^5.0.0-beta.30
+  typescript: ^5.8.2
+  zod: ^3.25.76
+  "@auth/core": ^0.41.0
 
 onlyBuiltDependencies:
   - esbuild
+  - sharp
   - unrs-resolver

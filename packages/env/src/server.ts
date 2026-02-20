@@ -43,10 +43,10 @@ const serverEnvSchema = z.object({
   // ── Auth ────────────────────────────────────────────────────────────────
   AUTH_SECRET: requiredString.describe("Auth.js signing secret (min 32 chars)"),
   AUTH_URL: requiredUrl.default("http://localhost:3000"),
-  GOOGLE_CLIENT_ID: optionalString,
-  GOOGLE_CLIENT_SECRET: optionalString,
-  GITHUB_CLIENT_ID: optionalString,
-  GITHUB_CLIENT_SECRET: optionalString,
+  AUTH_GOOGLE_ID: optionalString,
+  AUTH_GOOGLE_SECRET: optionalString,
+  AUTH_GITHUB_ID: optionalString,
+  AUTH_GITHUB_SECRET: optionalString,
 
   // ── Stripe ──────────────────────────────────────────────────────────────
   STRIPE_SECRET_KEY: optionalString,
