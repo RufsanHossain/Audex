@@ -56,3 +56,13 @@ export type { ApiKeyAuthResult, GeneratedApiKey } from "./api-keys/index.js";
 
 // ── Redis ───────────────────────────────────────────────────────────────────
 export { disconnectRedis } from "./redis.js";
+
+// ── Token Revocation ────────────────────────────────────────────────────────
+export {
+  cleanupExpiredRevocations,
+  isSessionRevoked,
+  isTokenBeforeEpoch,
+  isTokenRevoked,
+  revokeAllUserSessions,
+  revokeToken,
+} from "./revocation.js";

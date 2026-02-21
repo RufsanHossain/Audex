@@ -1,6 +1,8 @@
 import { connectDb, User as UserModel } from "@audex/db";
 import { UserRole } from "@audex/types";
 
+import { isSessionRevoked } from "./revocation.js";
+
 import type { Account, Session, User } from "next-auth";
 import type { JWT } from "next-auth/jwt";
 
@@ -49,6 +51,25 @@ export async function jwtCallback({
       token.id = dbUser._id.toString();
       token.role = dbUser.role as UserRole;
       token.emailVerified = dbUser.emailVerified ?? null;
+    }
+  }
+
+  // ── Revocation check ──────────────────────────────────────────────────
+  // On every token refresh, check if the session has been revoked.
+  // If revoked, return an empty token to force re-authentication.
+  if (token.id && token.iat) {
+    const revoked = await isSessionRevoked({
+      jti: token.jti,
+      userId: token.id,
+      issuedAt: token.iat,
+    });
+    if (revoked) {
+      return {
+        ...token,
+        id: "",
+        role: UserRole.Free,
+        emailVerified: null,
+      };
     }
   }
 
