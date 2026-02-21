@@ -4,10 +4,29 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "echo 'Web app not initialized yet'",
-    "build": "echo 'Web app not initialized yet'",
-    "typecheck": "echo 'Web app not initialized yet'",
-    "lint": "echo 'Web app not initialized yet'",
-    "clean": "rm -rf .next"
+    "dev": "next dev --turbopack",
+    "build": "next build --webpack",
+    "start": "next start",
+    "lint": "eslint src/",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@audex/auth": "workspace:*",
+    "@audex/db": "workspace:*",
+    "@audex/env": "workspace:*",
+    "@audex/types": "workspace:*",
+    "@audex/validators": "workspace:*",
+    "next": "catalog:",
+    "next-auth": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "catalog:",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "tailwindcss": "catalog:",
+    "typescript": "catalog:"
   }
 }

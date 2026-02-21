@@ -1,0 +1,7 @@
+{
+  "framework": "nextjs",
+  "installCommand": "pnpm install",
+  "buildCommand": "pnpm --filter @audex/web build",
+  "outputDirectory": "apps/web/.next",
+  "ignoreCommand": "npx turbo-ignore"
+}

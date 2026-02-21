@@ -11,6 +11,7 @@
     }
   },
   "scripts": {
+    "build": "tsc --project tsconfig.json",
     "typecheck": "tsc --noEmit",
     "lint": "eslint src/",
     "clean": "rm -rf dist"
@@ -22,9 +23,6 @@
     "bcryptjs": "catalog:",
     "next-auth": "catalog:",
     "@auth/core": "catalog:",
-    "@types/bcryptjs": "catalog:",
-    "next": "catalog:",
-    "typescript": "catalog:",
     "ioredis": "catalog:"
   },
   "devDependencies": {
