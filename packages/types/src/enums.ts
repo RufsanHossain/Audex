@@ -130,6 +130,50 @@ export enum ApiScope {
   WebhookManage = "webhook:manage",
 }
 
+// ─── Permissions ────────────────────────────────────────────────────────────
+
+/** Granular permissions for RBAC enforcement */
+export enum Permission {
+  // Audits
+  AuditCreate = "audit:create",
+  AuditRead = "audit:read",
+  AuditCancel = "audit:cancel",
+
+  // Reports
+  ReportRead = "report:read",
+  ReportExportPdf = "report:export:pdf",
+  ReportExportJson = "report:export:json",
+  ReportExportCsv = "report:export:csv",
+  ReportShare = "report:share",
+
+  // Projects
+  ProjectCreate = "project:create",
+  ProjectRead = "project:read",
+  ProjectUpdate = "project:update",
+  ProjectDelete = "project:delete",
+
+  // API
+  ApiAccess = "api:access",
+
+  // Webhooks
+  WebhookCreate = "webhook:create",
+  WebhookRead = "webhook:read",
+  WebhookDelete = "webhook:delete",
+
+  // Team
+  TeamManage = "team:manage",
+  TeamInvite = "team:invite",
+
+  // Scheduled Audits
+  ScheduledAuditCreate = "scheduled:create",
+  ScheduledAuditRead = "scheduled:read",
+
+  // Admin
+  AdminPanel = "admin:panel",
+  AdminUserManage = "admin:user:manage",
+  AdminSystemHealth = "admin:system:health",
+}
+
 // ─── Reports ────────────────────────────────────────────────────────────────
 
 /** Export format for report downloads */
