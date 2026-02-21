@@ -13,6 +13,7 @@ catalog:
   typescript: ^5.8.2
   zod: ^3.25.76
   "@auth/core": ^0.41.0
+  ioredis: ^5.9.3
 
 onlyBuiltDependencies:
   - esbuild

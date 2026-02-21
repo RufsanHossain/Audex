@@ -24,7 +24,8 @@
     "@auth/core": "catalog:",
     "@types/bcryptjs": "catalog:",
     "next": "catalog:",
-    "typescript": "catalog:"
+    "typescript": "catalog:",
+    "ioredis": "catalog:"
   },
   "devDependencies": {
     "@types/bcryptjs": "catalog:",

@@ -40,3 +40,19 @@ export {
 // ── Context ─────────────────────────────────────────────────────────────────
 export type { AuthContext } from "./context.js";
 export { extractAuth } from "./extract-auth.js";
+
+// ── API Keys ────────────────────────────────────────────────────────────────
+export {
+  authenticateApiKey,
+  generateApiKey,
+  hashApiKey,
+  requireAllScopes,
+  requireAnyScope,
+  requireScope,
+  revokeAllUserKeys,
+  revokeApiKey,
+} from "./api-keys/index.js";
+export type { ApiKeyAuthResult, GeneratedApiKey } from "./api-keys/index.js";
+
+// ── Redis ───────────────────────────────────────────────────────────────────
+export { disconnectRedis } from "./redis.js";
