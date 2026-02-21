@@ -1,3 +1,6 @@
+import { ThemeProvider } from "@audex/ui/components/theme-provider";
+import { TooltipProvider } from "@audex/ui/components/tooltip";
+
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 
@@ -26,8 +29,10 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className="min-h-screen bg-(--color-background)] text-(--color-foreground)] antialiased">
-        {children}
+      <body className="min-h-screen bg-background text-foreground antialiased">
+        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
+          <TooltipProvider>{children}</TooltipProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

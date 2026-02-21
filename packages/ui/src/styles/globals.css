@@ -1,0 +1,204 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+/*
+ * Source directives tell Tailwind v4 to scan these paths for class usage.
+ * This ensures classes used in the ui package AND the web app are all generated.
+ */
+@source "../components";
+@source "../lib";
+@source "../hooks";
+@source "../../../../apps/web/src";
+
+/*
+ * ─── Theme Configuration (Tailwind v4 CSS-first) ─────────────────────────────
+ * shadcn/ui variables defined in :root / .dark, then mapped to Tailwind via @theme inline.
+ * This approach keeps shadcn variables separate and allows the VS Code color picker to work.
+ */
+
+:root {
+  --radius: 0.625rem;
+
+  --background: hsl(0 0% 100%);
+  --foreground: hsl(222 47% 11%);
+
+  --card: hsl(0 0% 100%);
+  --card-foreground: hsl(222 47% 11%);
+
+  --popover: hsl(0 0% 100%);
+  --popover-foreground: hsl(222 47% 11%);
+
+  --primary: hsl(210 53% 24%);
+  --primary-foreground: hsl(0 0% 100%);
+
+  --secondary: hsl(210 40% 96%);
+  --secondary-foreground: hsl(222 47% 11%);
+
+  --muted: hsl(210 40% 96%);
+  --muted-foreground: hsl(215 16% 47%);
+
+  --accent: hsl(174 85% 32%);
+  --accent-foreground: hsl(0 0% 100%);
+
+  --destructive: hsl(0 84% 60%);
+  --destructive-foreground: hsl(0 0% 100%);
+
+  --success: hsl(142 71% 45%);
+  --success-foreground: hsl(0 0% 100%);
+
+  --warning: hsl(45 93% 47%);
+  --warning-foreground: hsl(222 47% 11%);
+
+  --info: hsl(217 91% 60%);
+  --info-foreground: hsl(0 0% 100%);
+
+  --border: hsl(214 32% 91%);
+  --input: hsl(214 32% 91%);
+  --ring: hsl(210 53% 24%);
+
+  --chart-1: hsl(210 53% 24%);
+  --chart-2: hsl(174 85% 32%);
+  --chart-3: hsl(217 91% 60%);
+  --chart-4: hsl(142 71% 45%);
+  --chart-5: hsl(45 93% 47%);
+
+  --sidebar: hsl(0 0% 98%);
+  --sidebar-foreground: hsl(222 47% 11%);
+  --sidebar-primary: hsl(210 53% 24%);
+  --sidebar-primary-foreground: hsl(0 0% 100%);
+  --sidebar-accent: hsl(210 40% 96%);
+  --sidebar-accent-foreground: hsl(222 47% 11%);
+  --sidebar-border: hsl(214 32% 91%);
+  --sidebar-ring: hsl(210 53% 24%);
+}
+
+.dark {
+  --background: hsl(222 47% 6%);
+  --foreground: hsl(210 40% 96%);
+
+  --card: hsl(222 47% 9%);
+  --card-foreground: hsl(210 40% 96%);
+
+  --popover: hsl(222 47% 9%);
+  --popover-foreground: hsl(210 40% 96%);
+
+  --primary: hsl(200 65% 48%);
+  --primary-foreground: hsl(0 0% 100%);
+
+  --secondary: hsl(222 30% 16%);
+  --secondary-foreground: hsl(210 40% 96%);
+
+  --muted: hsl(222 30% 16%);
+  --muted-foreground: hsl(215 16% 57%);
+
+  --accent: hsl(174 63% 40%);
+  --accent-foreground: hsl(0 0% 100%);
+
+  --destructive: hsl(0 62% 50%);
+  --destructive-foreground: hsl(0 0% 100%);
+
+  --success: hsl(142 60% 40%);
+  --success-foreground: hsl(0 0% 100%);
+
+  --warning: hsl(45 80% 50%);
+  --warning-foreground: hsl(222 47% 11%);
+
+  --info: hsl(217 80% 55%);
+  --info-foreground: hsl(0 0% 100%);
+
+  --border: hsl(222 30% 18%);
+  --input: hsl(222 30% 18%);
+  --ring: hsl(200 65% 48%);
+
+  --chart-1: hsl(200 65% 48%);
+  --chart-2: hsl(174 63% 40%);
+  --chart-3: hsl(217 80% 55%);
+  --chart-4: hsl(142 60% 40%);
+  --chart-5: hsl(45 80% 50%);
+
+  --sidebar: hsl(222 47% 8%);
+  --sidebar-foreground: hsl(210 40% 96%);
+  --sidebar-primary: hsl(200 65% 48%);
+  --sidebar-primary-foreground: hsl(0 0% 100%);
+  --sidebar-accent: hsl(222 30% 16%);
+  --sidebar-accent-foreground: hsl(210 40% 96%);
+  --sidebar-border: hsl(222 30% 18%);
+  --sidebar-ring: hsl(200 65% 48%);
+}
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+
+  --color-info: var(--info);
+  --color-info-foreground: var(--info-foreground);
+
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+/*
+ * ─── Base Reset ──────────────────────────────────────────────────────────────
+ */
+
+body {
+  font-family: var(--font-sans, system-ui, -apple-system, sans-serif);
+  background: var(--color-background);
+  color: var(--color-foreground);
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+}

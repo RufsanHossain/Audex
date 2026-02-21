@@ -40,6 +40,7 @@ const nextConfig: NextConfig = {
     "@audex/db",
     "@audex/env",
     "@audex/types",
+    "@audex/ui",
     "@audex/validators",
   ],
 
