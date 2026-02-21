@@ -22,6 +22,7 @@ const config: UserConfig = {
         "ci",
         "deps",
         "release",
+        "web",
       ],
     ],
     "subject-case": [2, "always", "lower-case"],
