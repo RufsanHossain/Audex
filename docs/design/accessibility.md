@@ -1,18 +1,43 @@
 # Audex — Accessibility Plan
 
-**Step 5 [P2][T1] | Version 1.0 | April 4, 2026**
-**Target:** WCAG 2.2 Level AA compliance
+**Step 5 [P2][T1] | Version 1.1 | April 4, 2026**
+**Target:** WCAG 2.2 Level AAA compliance
 
 ---
 
 ## Compliance Standard
 
-WCAG 2.2 AA across all pages. This covers 4 principles:
+WCAG 2.2 AAA across all pages. AAA is the highest level of conformance, exceeding the industry-standard AA. This covers 4 principles:
 
 1. **Perceivable** — content available to all senses
 2. **Operable** — all functionality via keyboard + assistive tech
 3. **Understandable** — content and UI are predictable
 4. **Robust** — works across browsers and assistive technologies
+
+### Why AAA?
+
+Audex is a code quality platform that literally scores websites on accessibility. We should lead by example. AAA conformance also:
+
+- Opens the product to government and education customers (strict procurement requirements)
+- Differentiates from competitors (most stop at AA)
+- Forces better design decisions that benefit all users
+
+### AAA vs AA — Key Differences
+
+| Criterion                 | AA Requirement              | AAA Requirement (what we do)                                        |
+| ------------------------- | --------------------------- | ------------------------------------------------------------------- |
+| Text contrast             | 4.5:1 normal, 3:1 large     | **7:1 normal, 4.5:1 large**                                         |
+| Non-text contrast         | 3:1                         | 3:1 (same)                                                          |
+| Timing                    | Can extend time limits      | **No time limits** (or user controls all timing)                    |
+| Audio/visual distractions | Can pause/stop              | **No auto-playing content** of any kind                             |
+| Navigation                | Multiple ways to find pages | **Multiple ways + location indicator** (breadcrumbs required)       |
+| Reading level             | No requirement              | **Lower secondary education level** (grade 7-9 reading level)       |
+| Unusual words             | No requirement              | **Glossary or definitions** for technical terms                     |
+| Error prevention          | For legal/financial         | **For all user input** (confirm, undo, or review all submissions)   |
+| Context changes           | On request only             | **No context changes** unless user-initiated or warned              |
+| Keyboard                  | All functionality           | **No keyboard shortcuts conflict** with browser/AT shortcuts        |
+| Target size               | 24x24px minimum             | **44x44px minimum** for all interactive targets                     |
+| Focus appearance          | Visible focus               | **Enhanced focus** (min 2px outline, 3:1 contrast against adjacent) |
 
 ---
 
@@ -159,14 +184,23 @@ All interactive elements must show a visible focus ring on keyboard focus. Use `
 
 ## Color & Contrast
 
-### Minimum Contrast Ratios (WCAG AA)
+### Minimum Contrast Ratios (WCAG AAA — Enhanced)
 
-| Content                              | Ratio | Test                                     |
-| ------------------------------------ | ----- | ---------------------------------------- |
-| Normal text (< 18px)                 | 4.5:1 | All body text, labels, descriptions      |
-| Large text (>= 18px bold or >= 24px) | 3:1   | Headings, large buttons                  |
-| UI components (borders, icons)       | 3:1   | Input borders, icon buttons, focus rings |
-| Non-text contrast                    | 3:1   | Charts, graphs, data visualization       |
+| Content                              | AA Ratio | AAA Ratio (our target) | Test                                     |
+| ------------------------------------ | -------- | ---------------------- | ---------------------------------------- |
+| Normal text (< 18px)                 | 4.5:1    | **7:1**                | All body text, labels, descriptions      |
+| Large text (>= 18px bold or >= 24px) | 3:1      | **4.5:1**              | Headings, large buttons                  |
+| UI components (borders, icons)       | 3:1      | 3:1 (same)             | Input borders, icon buttons, focus rings |
+| Non-text contrast                    | 3:1      | 3:1 (same)             | Charts, graphs, data visualization       |
+| Placeholder text                     | —        | **4.5:1**              | Input placeholders (often too faint)     |
+| Disabled state text                  | —        | **3:1**                | Disabled buttons/inputs still readable   |
+
+**Color palette implications:**
+
+- Body text on white: minimum `#595959` (was `#737373` at AA)
+- Body text on dark bg: minimum `#a3a3a3` (verify against theme)
+- All shadcn/ui muted colors must be audited against both themes
+- Use WebAIM Contrast Checker or Stark plugin to verify every text/bg combo
 
 ### Color Independence
 
@@ -187,6 +221,148 @@ Never convey information by color alone. Always pair with:
 - Test with shadcn/ui theme tokens (not hardcoded colors)
 - Ensure focus rings visible on both dark and light backgrounds
 - Chart colors must work on both backgrounds
+
+---
+
+## AAA-Specific Requirements
+
+### 1. Reading Level (WCAG 3.1.5 — AAA)
+
+All user-facing text must be understandable at a **lower secondary education reading level** (grade 7-9). This means:
+
+- Short sentences (< 25 words)
+- Common words over jargon
+- Active voice over passive
+- One idea per paragraph
+
+| Instead of                                                | Write                                                           |
+| --------------------------------------------------------- | --------------------------------------------------------------- |
+| "The audit has been enqueued for asynchronous processing" | "Your audit is in the queue. We'll start it shortly."           |
+| "Insufficient permissions to access this resource"        | "You don't have access to this page."                           |
+| "Rate limit threshold exceeded for current billing tier"  | "You've hit your plan's limit. Upgrade for more."               |
+| "Dimension score derived via severity-weighted deduction" | "Score starts at 100. We subtract points for each issue found." |
+
+**Exception:** Technical terms in the report findings (CSP, HSTS, LCP) are acceptable because the target audience is developers. Provide a glossary link for non-developer users.
+
+### 2. Technical Glossary (WCAG 3.1.3, 3.1.4 — AAA)
+
+Provide definitions for unusual words and abbreviations:
+
+- Glossary page at `/docs/glossary` defining all dimension-specific terms
+- Abbreviation `<abbr>` tags on first use: `<abbr title="Content Security Policy">CSP</abbr>`
+- Tooltip on technical terms in report findings (hover/focus reveals definition)
+- Finding descriptions always explain the "why" in plain language before the technical detail
+
+### 3. No Timing Constraints (WCAG 2.2.3, 2.2.6 — AAA)
+
+- No session timeout while user is active (Auth.js 30-day sessions handle this)
+- SSE connections have no client-side timeout (server heartbeat keeps alive)
+- No auto-advancing content (carousels, slideshows, auto-playing anything)
+- No timed quizzes, countdowns, or expiring UI elements
+- Rate limit "retry after" shows remaining time but never auto-dismisses the form
+- The only countdown allowed: Stripe checkout session (Stripe-controlled, not ours)
+
+### 4. Error Prevention for All Input (WCAG 3.3.6 — AAA)
+
+At AA, error prevention is only required for legal/financial actions. At AAA, **all user submissions** must be confirmable, reversible, or reviewable:
+
+| Action              | Error Prevention                                                             |
+| ------------------- | ---------------------------------------------------------------------------- |
+| Create audit        | Review URL + settings before submitting (form has "Analyze" not auto-submit) |
+| Cancel audit        | Confirmation dialog: "Cancel this audit? Partial results will be lost."      |
+| Delete project      | Confirmation: type project name to confirm                                   |
+| Delete account      | Confirmation: type email + "delete my account"                               |
+| Revoke API key      | Confirmation dialog with key name                                            |
+| Change password     | Current password required + confirmation field                               |
+| Change email        | Re-verification email sent, old email notified                               |
+| Change role (admin) | Confirmation dialog with role name                                           |
+| Export report       | Preview format before generating                                             |
+| Share report        | Review access level before sharing                                           |
+
+### 5. Enhanced Target Size (WCAG 2.5.5 — AAA)
+
+All interactive targets must be **at least 44x44 CSS pixels** (AA only requires 24x24):
+
+```css
+/* Enforce minimum target size */
+button,
+a,
+input[type="checkbox"],
+input[type="radio"],
+select,
+[role="tab"],
+[role="menuitem"] {
+  min-height: 44px;
+  min-width: 44px;
+}
+```
+
+- Inline text links are exempt (surrounded by text)
+- Apply to: buttons, links, checkboxes, radio buttons, select dropdowns, tab triggers, menu items, icon buttons
+- Mobile: already targeting 44px (Step 2 wireframes), this makes it universal
+- Spacing between targets: minimum 8px gap to prevent mis-taps
+
+### 6. Enhanced Focus Appearance (WCAG 2.4.13 — AAA)
+
+Focus indicators must be **highly visible**, not just present:
+
+```css
+/* AAA-compliant focus ring */
+:focus-visible {
+  outline: 3px solid var(--ring); /* min 2px, we use 3px */
+  outline-offset: 2px;
+  /* ring color must have 3:1 contrast against adjacent colors */
+}
+```
+
+Requirements:
+
+- Outline at least 2px thick (we use 3px)
+- Outline color has 3:1 contrast against both the component and adjacent background
+- Focus indicator encloses the entire component (not partial)
+- Change of contrast area is at least as large as a 2px perimeter of the component
+
+### 7. No Interruptions (WCAG 2.2.4 — AAA)
+
+Interruptions (non-user-initiated alerts, updates) can be postponed or suppressed:
+
+- Toast notifications: never steal focus, dismissible, configurable in settings
+- SSE progress updates: `aria-live="polite"` (never `assertive` except errors)
+- Notification bell: shows count badge but never interrupts
+- Email notifications: all opt-in, granular controls in settings
+- No auto-playing audio or video anywhere
+- No pop-ups or modals that appear without user action
+
+### 8. Multiple Navigation Mechanisms (WCAG 2.4.5 — AAA)
+
+Users must have **more than one way** to find any page:
+
+| Mechanism          | Implementation                                                 |
+| ------------------ | -------------------------------------------------------------- |
+| Primary navigation | Sidebar links (Dashboard, Projects, Audits, Settings)          |
+| Search             | Command palette (Cmd+K) — searches audits, projects, pages     |
+| Breadcrumbs        | Shown on all pages: Dashboard > Projects > project-name        |
+| Direct URL         | Clean, bookmarkable URLs for all pages                         |
+| Sitemap            | HTML sitemap at `/sitemap` (for humans, not just XML for bots) |
+| Keyboard shortcuts | G+D (Dashboard), G+P (Projects), G+A (Audits)                  |
+
+### 9. Section Headings (WCAG 2.4.10 — AAA)
+
+All content must be organized with descriptive section headings:
+
+- Every page section gets a heading (even if visually de-emphasized)
+- Headings describe the content that follows
+- Use headings to break up long report pages (one per dimension, one per finding group)
+- Settings tabs each start with an `<h2>` for their section
+
+### 10. Context Changes (WCAG 3.2.5 — AAA)
+
+No context changes (page navigation, focus shift, form submission) without user initiation or explicit warning:
+
+- Form submission only on explicit button click (never on input change)
+- Dropdowns/selects: changing value doesn't navigate (use "Apply" button)
+- Links open in same tab by default (external links get `aria-label` noting new tab)
+- No auto-redirect after form submission — show success state, let user navigate
 
 ---
 
@@ -235,14 +411,18 @@ Charts are visual-only by default. Make accessible via:
 
 ### Manual (Per Stage Gate)
 
-| Test                     | Tool                     | Frequency              |
-| ------------------------ | ------------------------ | ---------------------- |
-| Keyboard-only navigation | Browser (no mouse)       | Every stage gate       |
-| Screen reader            | VoiceOver (macOS)        | Every stage gate       |
-| Color contrast           | WebAIM Contrast Checker  | When adding new colors |
-| Zoom (200%)              | Browser zoom             | Every stage gate       |
-| Reduced motion           | System preference toggle | When adding animations |
-| High contrast mode       | OS setting               | Once before launch     |
+| Test                     | Tool                        | Frequency              | AAA-Specific                     |
+| ------------------------ | --------------------------- | ---------------------- | -------------------------------- |
+| Keyboard-only navigation | Browser (no mouse)          | Every stage gate       | Verify no shortcut conflicts     |
+| Screen reader            | VoiceOver (macOS)           | Every stage gate       | Verify glossary terms read       |
+| Color contrast           | WebAIM Contrast Checker     | When adding new colors | **7:1 for body text**            |
+| Zoom (400%)              | Browser zoom                | Every stage gate       | **400% zoom (AAA), not 200%**    |
+| Reduced motion           | System preference toggle    | When adding animations | Verify zero animation            |
+| High contrast mode       | OS setting                  | Once before launch     |                                  |
+| Reading level            | Hemingway App / readability | When writing copy      | **Grade 7-9 reading level**      |
+| Target size              | DevTools element inspector  | Every stage gate       | **All targets >= 44x44px**       |
+| Focus appearance         | Manual inspection           | Every stage gate       | **3px ring, 3:1 contrast**       |
+| No timing                | Manual walkthrough          | Every stage gate       | **No time-limited interactions** |
 
 ### Screen Reader Testing Checklist
 
@@ -264,13 +444,28 @@ Walk through with VoiceOver (macOS):
 
 ## Implementation Rules for Developers
 
-1. **Use shadcn/ui components** — they're built on Radix which handles ARIA patterns correctly
-2. **Never suppress focus outlines** — use `focus-visible:ring` from Tailwind
+### Core Rules (AA baseline)
+
+1. **Use shadcn/ui components** — built on Radix which handles ARIA correctly
+2. **Never suppress focus outlines** — use `focus-visible:ring` with 3px width
 3. **Every `<img>` gets `alt`** — no exceptions, even decorative (`alt=""`)
 4. **Every icon button gets `aria-label`** — icons are invisible to screen readers
-5. **Every form field gets `<label>`** — linked by `htmlFor`/`id`, not just visual proximity
-6. **Use `aria-live` sparingly** — only for dynamic content users need to know about immediately
+5. **Every form field gets `<label>`** — linked by `htmlFor`/`id`, not visual proximity
+6. **Use `aria-live="polite"`** — never `assertive` except for errors
 7. **Test with keyboard** before submitting PR — Tab through your new component
-8. **One `<h1>` per page** — heading levels never skip (h1 → h2 → h3, never h1 → h3)
+8. **One `<h1>` per page** — heading levels never skip (h1 → h2 → h3)
 9. **Color is never the only signal** — always pair with text, icon, or pattern
 10. **Respect `prefers-reduced-motion`** — wrap all animations
+
+### AAA-Specific Rules (additional)
+
+11. **7:1 contrast for body text** — verify every text/background combo, both themes
+12. **44x44px minimum touch targets** — all buttons, links, checkboxes, tabs, menu items
+13. **Confirm before destructive actions** — delete, revoke, cancel all need confirmation dialogs
+14. **No auto-triggered context changes** — form submissions only on explicit button click
+15. **Plain language** — grade 7-9 reading level for all UI copy, error messages, descriptions
+16. **Use `<abbr>` for technical terms** — first occurrence gets `title` attribute with definition
+17. **Breadcrumbs on every page** — shows user location in site hierarchy
+18. **No timing-dependent UI** — no auto-dismiss, no countdown-required actions
+19. **400% zoom support** — test all layouts at 400% browser zoom, no content loss
+20. **8px minimum gap** between interactive targets — prevent mis-clicks
