@@ -23,6 +23,8 @@ const config: UserConfig = {
         "deps",
         "release",
         "web",
+        "docs",
+        "infra",
       ],
     ],
     "subject-case": [2, "always", "lower-case"],
