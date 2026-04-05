@@ -54,8 +54,8 @@ export {
 } from "./api-keys/index.js";
 export type { ApiKeyAuthResult, GeneratedApiKey } from "./api-keys/index.js";
 
-// ── Redis ───────────────────────────────────────────────────────────────────
-export { disconnectRedis } from "./redis.js";
+// ── Redis (re-exported from @audex/infra) ───────────────────────────────────
+export { disconnectRedis } from "@audex/infra/redis";
 
 // ── Token Revocation ────────────────────────────────────────────────────────
 export {

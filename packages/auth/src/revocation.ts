@@ -1,4 +1,4 @@
-import { getRedis } from "./redis.js";
+import { getRedis } from "@audex/infra/redis";
 
 /**
  * Redis key for individual token revocation set.

@@ -1,6 +1,5 @@
 import { connectDb, ApiKey } from "@audex/db";
-
-import { getRedis } from "../redis.js";
+import { getRedis } from "@audex/infra/redis";
 
 import { hashApiKey } from "./generate.js";
 
