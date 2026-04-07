@@ -12,6 +12,10 @@
       "types": "./src/redis.ts",
       "default": "./src/redis.ts"
     },
+    "./pubsub": {
+      "types": "./src/pubsub.ts",
+      "default": "./src/pubsub.ts"
+    },
     "./logger": {
       "types": "./src/logger.ts",
       "default": "./src/logger.ts"
