@@ -20,6 +20,10 @@
       "types": "./src/queue.ts",
       "default": "./src/queue.ts"
     },
+    "./queues": {
+      "types": "./src/queues.ts",
+      "default": "./src/queues.ts"
+    },
     "./logger": {
       "types": "./src/logger.ts",
       "default": "./src/logger.ts"
