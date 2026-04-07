@@ -9,3 +9,11 @@ export {
   subscribeToUser,
   disconnectSubscriber,
 } from "./pubsub.js";
+export {
+  getQueue,
+  getQueueConnection,
+  createWorker,
+  getPlanPriority,
+  addJob,
+  closeAllQueues,
+} from "./queue.js";

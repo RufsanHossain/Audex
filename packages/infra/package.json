@@ -16,6 +16,10 @@
       "types": "./src/pubsub.ts",
       "default": "./src/pubsub.ts"
     },
+    "./queue": {
+      "types": "./src/queue.ts",
+      "default": "./src/queue.ts"
+    },
     "./logger": {
       "types": "./src/logger.ts",
       "default": "./src/logger.ts"
@@ -29,6 +33,7 @@
   },
   "dependencies": {
     "@audex/types": "workspace:*",
+    "bullmq": "^5.73.0",
     "ioredis": "catalog:"
   },
   "devDependencies": {
