@@ -5,13 +5,25 @@
   "type": "module",
   "exports": {
     ".": {
-      "types": "./src/index.ts"
+      "types": "./src/index.ts",
+      "default": "./src/index.ts"
+    },
+    "./sse": {
+      "types": "./src/sse.ts",
+      "default": "./src/sse.ts"
     }
   },
   "scripts": {
-    "build": "tsc --build",
+    "build": "echo 'no build step'",
     "typecheck": "tsc --noEmit",
     "lint": "eslint src/",
     "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@audex/infra": "workspace:*",
+    "@audex/types": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "catalog:"
   }
 }

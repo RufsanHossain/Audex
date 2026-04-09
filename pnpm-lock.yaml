@@ -258,7 +258,18 @@ importers:
         specifier: 'catalog:'
         version: 5.9.3
 
-  packages/realtime: {}
+  packages/realtime:
+    dependencies:
+      '@audex/infra':
+        specifier: workspace:*
+        version: link:../infra
+      '@audex/types':
+        specifier: workspace:*
+        version: link:../types
+    devDependencies:
+      typescript:
+        specifier: 'catalog:'
+        version: 5.9.3
 
   packages/types: {}
 
