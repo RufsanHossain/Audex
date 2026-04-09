@@ -44,3 +44,4 @@ export {
   rateLimitHeaders,
 } from "./rate-limit.js";
 export type { RateLimitResult } from "./rate-limit.js";
+export { logger, createLogger, createRequestLogger, createWorkerLogger } from "./logger.js";
