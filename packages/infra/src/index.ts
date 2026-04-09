@@ -26,3 +26,12 @@ export {
   getQueueHealth,
   getTotalQueueDepth,
 } from "./queues.js";
+export {
+  checkRateLimit,
+  checkApiRateLimit,
+  checkAuthRateLimit,
+  peekRateLimit,
+  getTierLimit,
+  rateLimitHeaders,
+} from "./rate-limit.js";
+export type { RateLimitResult } from "./rate-limit.js";

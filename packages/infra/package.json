@@ -24,6 +24,10 @@
       "types": "./src/queues.ts",
       "default": "./src/queues.ts"
     },
+    "./rate-limit": {
+      "types": "./src/rate-limit.ts",
+      "default": "./src/rate-limit.ts"
+    },
     "./logger": {
       "types": "./src/logger.ts",
       "default": "./src/logger.ts"
