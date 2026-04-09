@@ -45,3 +45,15 @@ export {
 } from "./rate-limit.js";
 export type { RateLimitResult } from "./rate-limit.js";
 export { logger, createLogger, createRequestLogger, createWorkerLogger } from "./logger.js";
+export {
+  writeAuditLog,
+  logAuth,
+  logAuditAction,
+  logReportAction,
+  logApiKeyAction,
+  logProjectAction,
+  logSettingsChange,
+  logPlanChange,
+  logTeamAction,
+  logAdminAction,
+} from "./audit-log.js";

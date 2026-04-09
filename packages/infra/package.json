@@ -24,6 +24,10 @@
       "types": "./src/queues.ts",
       "default": "./src/queues.ts"
     },
+    "./audit-log": {
+      "types": "./src/audit-log.ts",
+      "default": "./src/audit-log.ts"
+    },
     "./usage": {
       "types": "./src/usage.ts",
       "default": "./src/usage.ts"
