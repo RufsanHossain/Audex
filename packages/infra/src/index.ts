@@ -26,6 +26,8 @@ export {
   getQueueHealth,
   getTotalQueueDepth,
 } from "./queues.js";
+export { getUsage, incrementUsage, canCreateAudit, resetUsage, setUsage } from "./usage.js";
+export type { UsageInfo } from "./usage.js";
 export {
   acquireAuditSlot,
   releaseAuditSlot,
