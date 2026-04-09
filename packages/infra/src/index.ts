@@ -27,6 +27,13 @@ export {
   getTotalQueueDepth,
 } from "./queues.js";
 export {
+  acquireAuditSlot,
+  releaseAuditSlot,
+  getActiveSlotCount,
+  getActiveAuditIds,
+} from "./concurrency.js";
+export type { ConcurrencyResult } from "./concurrency.js";
+export {
   checkRateLimit,
   checkApiRateLimit,
   checkAuthRateLimit,
