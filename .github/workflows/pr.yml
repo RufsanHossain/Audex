@@ -9,6 +9,30 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  commitlint:
+    name: Validate PR Title
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Validate PR title
+        run: echo "${{ github.event.pull_request.title }}" | pnpm commitlint
+
   check:
     name: Lint, Typecheck, Build & Test
     runs-on: ubuntu-latest
