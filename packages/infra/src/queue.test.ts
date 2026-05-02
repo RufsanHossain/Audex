@@ -50,6 +50,7 @@ describe("queue", () => {
 
     it("enables TLS by default", () => {
       vi.stubEnv("REDIS_URL", "redis://localhost:6379");
+      vi.stubEnv("REDIS_TLS", undefined);
 
       const conn = getQueueConnection();
 
