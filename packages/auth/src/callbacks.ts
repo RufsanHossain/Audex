@@ -92,15 +92,13 @@ export function sessionCallback({ session, token }: { session: Session; token: J
   return session;
 }
 
-export function signInCallback({
-  account,
-}: {
+export function signInCallback(_params: {
   user: User;
   account?: Account | null;
 }): boolean | string {
-  if (account?.provider === "google" || account?.provider === "github") {
-    return true;
-  }
-
+  // Provider validation lives in each provider's authorize/profile flow
+  // (credentials checks the password; OAuth providers verify the code with
+  // the IdP). By the time signInCallback runs, the identity is confirmed.
+  // Add allowlist/email-verification gating here when those policies exist.
   return true;
 }
