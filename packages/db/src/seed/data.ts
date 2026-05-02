@@ -50,7 +50,6 @@ export const users = [
     },
     auditCount: 150,
     auditLimit: -1, // unlimited
-    isActive: true,
     settings: {
       defaultDevice: DeviceType.Desktop,
       notifications: { email: true, inApp: true },
@@ -70,7 +69,6 @@ export const users = [
     },
     auditCount: 42,
     auditLimit: 100,
-    isActive: true,
     settings: {
       defaultDevice: DeviceType.Mobile,
       notifications: { email: true, inApp: true },
@@ -85,7 +83,6 @@ export const users = [
     plan: { tier: PlanTier.Free },
     auditCount: 3,
     auditLimit: 5,
-    isActive: true,
     settings: {
       defaultDevice: DeviceType.Desktop,
       notifications: { email: false, inApp: true },
@@ -105,7 +102,6 @@ export const users = [
     },
     auditCount: 85,
     auditLimit: 500,
-    isActive: true,
     settings: {
       defaultDevice: DeviceType.Desktop,
       notifications: { email: true, inApp: true },
@@ -120,7 +116,6 @@ export const users = [
     plan: { tier: PlanTier.Team },
     auditCount: 20,
     auditLimit: 500,
-    isActive: true,
     settings: {
       defaultDevice: DeviceType.Mobile,
       notifications: { email: true, inApp: false },
@@ -202,13 +197,16 @@ function makeDimensionResult(dimension: DimensionId, score: number, findingCount
     FindingSeverity.Critical,
   ];
 
+  const impactAreas = ["core", "standard", "supporting", "minor"] as const;
+
   const findings = Array.from({ length: findingCount }, (_, i) => ({
     ruleId: `${dimension}-rule-${String(i + 1).padStart(3, "0")}`,
     severity: severities[i % severities.length],
+    impactArea: impactAreas[i % impactAreas.length],
     title: `${dimension} finding #${i + 1}`,
     description: `Seed finding for ${dimension} dimension — issue ${i + 1}`,
     recommendation: `Fix the ${dimension} issue by addressing the flagged element.`,
-    impact: (i % 3) + 1,
+    deduction: (i % 3) + 1,
   }));
 
   return {
@@ -217,7 +215,7 @@ function makeDimensionResult(dimension: DimensionId, score: number, findingCount
     grade,
     findings,
     metrics: {},
-    executionTime: 800 + Math.floor(Math.random() * 2000),
+    executionTimeMs: 800 + Math.floor(Math.random() * 2000),
     status: EngineStatus.Complete,
   };
 }
@@ -253,7 +251,7 @@ export const reports = [
       url: "https://acme.example.com",
       statusCode: 200,
       redirectChain: [],
-      responseTime: 1250,
+      responseTimeMs: 1250,
       screenshotUrls: [],
     },
     completedAt: new Date("2026-02-18T10:30:00Z"),
@@ -273,7 +271,7 @@ export const reports = [
       url: "https://acme.example.com",
       statusCode: 200,
       redirectChain: [],
-      responseTime: 1800,
+      responseTimeMs: 1800,
       screenshotUrls: [],
     },
     completedAt: new Date("2026-02-17T14:00:00Z"),
@@ -293,7 +291,7 @@ export const reports = [
       url: "https://blog.acme.example.com",
       statusCode: 200,
       redirectChain: [],
-      responseTime: 950,
+      responseTimeMs: 950,
       screenshotUrls: [],
     },
     completedAt: new Date("2026-02-16T09:15:00Z"),
@@ -312,7 +310,7 @@ export const reports = [
       url: "https://my-portfolio.example.com",
       statusCode: 200,
       redirectChain: [],
-      responseTime: 3200,
+      responseTimeMs: 3200,
       screenshotUrls: [],
     },
     completedAt: new Date("2026-02-15T18:45:00Z"),
@@ -332,7 +330,7 @@ export const reports = [
       url: "https://dashboard.internal.example.com",
       statusCode: 200,
       redirectChain: [],
-      responseTime: 2100,
+      responseTimeMs: 2100,
       screenshotUrls: [],
     },
     completedAt: new Date("2026-02-14T11:00:00Z"),

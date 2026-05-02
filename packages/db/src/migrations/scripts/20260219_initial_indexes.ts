@@ -19,9 +19,7 @@ export const migration: Migration = {
         name: "idx_users_stripe_customer",
       },
     );
-    await db
-      .collection("users")
-      .createIndex({ role: 1, isActive: 1 }, { name: "idx_users_role_active" });
+    await db.collection("users").createIndex({ role: 1 }, { name: "idx_users_role" });
     await db.collection("users").createIndex({ createdAt: -1 }, { name: "idx_users_created" });
 
     // ── Reports ───────────────────────────────────────────────────────────
@@ -37,17 +35,6 @@ export const migration: Migration = {
         { projectId: 1, createdAt: -1 },
         { sparse: true, name: "idx_reports_project_created" },
       );
-    await db.collection("reports").createIndex(
-      { "metadata.shareSlug": 1 },
-      {
-        unique: true,
-        sparse: true,
-        name: "idx_reports_share_slug",
-      },
-    );
-    await db
-      .collection("reports")
-      .createIndex({ expiresAt: 1 }, { expireAfterSeconds: 0, name: "idx_reports_ttl" });
 
     // ── Projects ──────────────────────────────────────────────────────────
     await db
@@ -84,10 +71,7 @@ export const migration: Migration = {
     // ── Notifications ─────────────────────────────────────────────────────
     await db
       .collection("notifications")
-      .createIndex(
-        { userId: 1, isRead: 1, createdAt: -1 },
-        { name: "idx_notifications_user_read" },
-      );
+      .createIndex({ userId: 1, read: 1, createdAt: -1 }, { name: "idx_notifications_user_read" });
     await db.collection("notifications").createIndex(
       { createdAt: 1 },
       {
@@ -113,13 +97,11 @@ export const migration: Migration = {
     const drops: [string, string][] = [
       ["users", "idx_users_email"],
       ["users", "idx_users_stripe_customer"],
-      ["users", "idx_users_role_active"],
+      ["users", "idx_users_role"],
       ["users", "idx_users_created"],
       ["reports", "idx_reports_user_created"],
       ["reports", "idx_reports_status_created"],
       ["reports", "idx_reports_project_created"],
-      ["reports", "idx_reports_share_slug"],
-      ["reports", "idx_reports_ttl"],
       ["projects", "idx_projects_user_slug"],
       ["projects", "idx_projects_user_created"],
       ["apiKeys", "idx_apikeys_hash"],
