@@ -9,13 +9,13 @@ import {
   releaseAuditSlot,
 } from "@audex/infra";
 import { Permission } from "@audex/types";
-import { ApiError, createAuditSchema } from "@audex/validators";
+import { ApiError, createAuditSchema, listAuditsSchema } from "@audex/validators";
 
-import { jsonAccepted, withHandler } from "../../../../lib/api/index.js";
+import { jsonAccepted, jsonOk, withHandler } from "../../../../lib/api/index.js";
 import { roleToPlanTier } from "../../../../lib/api/plan.js";
 
 import type { DeviceType } from "@audex/types";
-import type { CreateAuditInput } from "@audex/validators";
+import type { CreateAuditInput, ListAuditsInput } from "@audex/validators";
 
 // ─── Constants ─────────────────────────────────────────────────────────────
 
@@ -155,4 +155,65 @@ export const POST = withHandler({ body: createAuditSchema }, async ({ auth, body
     await releaseAuditSlot(auth.userId, auditId);
     throw err;
   }
+});
+
+// ─── GET /api/v1/audits ────────────────────────────────────────────────────
+
+/**
+ * List the authenticated user's audits with pagination, filters, and sort.
+ *
+ * Query params (validated via listAuditsSchema):
+ *   - page (default 1)
+ *   - limit (default 20, max 100)
+ *   - status, type, projectId, search, from, to
+ *   - sort: createdAt | totalScore | duration (default createdAt)
+ *   - order: asc | desc (default desc)
+ */
+export const GET = withHandler({ query: listAuditsSchema }, async ({ auth, query, log }) => {
+  const q = query as ListAuditsInput;
+
+  await connectDb();
+
+  // Build MongoDB filter
+  const filter: Record<string, unknown> = { userId: auth.userId };
+  if (q.status) filter["status"] = q.status;
+  if (q.type) filter["inputType"] = q.type;
+  if (q.projectId) filter["projectId"] = q.projectId;
+  if (q.search) filter["inputValue"] = { $regex: q.search, $options: "i" };
+  if (q.from || q.to) {
+    const dateFilter: Record<string, Date> = {};
+    if (q.from) dateFilter["$gte"] = q.from;
+    if (q.to) dateFilter["$lte"] = q.to;
+    filter["createdAt"] = dateFilter;
+  }
+
+  const sortField = q.sort;
+  const sortOrder = q.order === "asc" ? 1 : -1;
+  const skip = (q.page - 1) * q.limit;
+
+  const [items, total] = await Promise.all([
+    Report.find(filter)
+      .select(
+        "inputType inputValue status device source totalScore grade createdAt completedAt duration projectId",
+      )
+      .sort({ [sortField]: sortOrder })
+      .skip(skip)
+      .limit(q.limit)
+      .lean(),
+    Report.countDocuments(filter),
+  ]);
+
+  log.debug({ count: items.length, total }, "Listed audits");
+
+  return jsonOk({
+    items,
+    pagination: {
+      page: q.page,
+      limit: q.limit,
+      total,
+      pages: Math.ceil(total / q.limit),
+      hasNext: skip + items.length < total,
+      hasPrev: q.page > 1,
+    },
+  });
 });
