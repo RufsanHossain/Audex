@@ -3,13 +3,13 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 /**
- * Next.js Edge Middleware.
+ * Next.js Edge Proxy (renamed from `middleware` in Next 16).
  *
  * Runs on every matched request at the edge.
  * Auth.js session check will be added in later steps.
  * For now, just pass through with security headers.
  */
-export function middleware(_request: NextRequest) {
+export function proxy(_request: NextRequest) {
   const response = NextResponse.next();
 
   // Add request ID for tracing

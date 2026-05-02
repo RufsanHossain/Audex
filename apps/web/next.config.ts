@@ -12,7 +12,7 @@ const nextConfig: NextConfig = {
     ],
   },
 
-  async headers() {
+  headers() {
     return [
       {
         source: "/(.*)",
@@ -39,6 +39,8 @@ const nextConfig: NextConfig = {
     "@audex/auth",
     "@audex/db",
     "@audex/env",
+    "@audex/infra",
+    "@audex/realtime",
     "@audex/types",
     "@audex/ui",
     "@audex/validators",
@@ -50,7 +52,21 @@ const nextConfig: NextConfig = {
     },
   },
 
-  webpack: (config) => {
+  // Native dependencies that load worker threads or non-JS files at runtime.
+  // Without this, webpack chunking breaks them in Next.js dev/build.
+  // pino + transports use worker_threads via `new Worker(new URL("./worker.js", import.meta.url))`.
+  serverExternalPackages: [
+    "mongoose",
+    "mongodb",
+    "ioredis",
+    "bullmq",
+    "pino",
+    "pino-pretty",
+    "thread-stream",
+    "sonic-boom",
+  ],
+
+  webpack: (config: { resolve: { extensionAlias?: Record<string, string[]> } }) => {
     config.resolve.extensionAlias = {
       ".js": [".ts", ".tsx", ".js", ".jsx"],
       ".mjs": [".mts", ".mjs"],

@@ -60,7 +60,7 @@ const UserSchema = new Schema<IUserDoc>(
         enum: ["free", "pro", "team", "enterprise"],
         default: "free",
       },
-      stripeCustomerId: { type: String, sparse: true },
+      stripeCustomerId: { type: String },
       stripeSubscriptionId: { type: String },
       currentPeriodEnd: { type: Date },
     },

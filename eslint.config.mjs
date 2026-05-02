@@ -24,7 +24,12 @@ export default tseslint.config(
         ...globals.node,
       },
       parserOptions: {
-        projectService: true,
+        projectService: {
+          allowDefaultProject: [
+            "commitlint.config.ts",
+            "packages/*/vitest.config.ts",
+          ],
+        },
         tsconfigRootDir: import.meta.dirname,
       },
     },
@@ -69,5 +74,9 @@ export default tseslint.config(
       ],
       "import-x/no-duplicates": "error",
     },
+  },
+  {
+    files: ["commitlint.config.ts", "packages/*/vitest.config.ts"],
+    ...tseslint.configs.disableTypeChecked,
   }
 );

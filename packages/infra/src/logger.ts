@@ -7,6 +7,14 @@ import type { Logger } from "pino";
 const nodeEnv: string = process.env["NODE_ENV"] ?? "development";
 const isDev = nodeEnv !== "production" && nodeEnv !== "staging";
 
+// Detect Next.js runtime. Pino's `pino-pretty` transport spawns a worker_thread
+// (via thread-stream), which Next/webpack tries to bundle as a vendor chunk and
+// fails (`Cannot find module .../vendor-chunks/lib/worker.js`). So inside Next
+// we emit plain JSON; workers and scripts still get pretty output. Pipe Next
+// dev logs through `pino-pretty` on the CLI if you want colors there too.
+const inNext = typeof process.env["NEXT_RUNTIME"] === "string";
+const usePrettyTransport = isDev && !inNext;
+
 const level = process.env["LOG_LEVEL"] ?? (isDev ? "debug" : "info");
 
 // ─── Root Logger ───────────────────────────────────────────────────────────
@@ -15,11 +23,12 @@ const level = process.env["LOG_LEVEL"] ?? (isDev ? "debug" : "info");
  * Root Pino logger for all Audex services.
  *
  * - Production/staging: JSON output (structured, machine-parseable)
- * - Development: pretty-printed via pino-pretty (human-readable)
+ * - Development (workers/scripts): pretty-printed via pino-pretty
+ * - Development (inside Next.js): JSON (transport worker is incompatible with Next bundling)
  */
 export const logger: Logger = pino({
   level,
-  ...(isDev
+  ...(usePrettyTransport
     ? {
         transport: {
           target: "pino-pretty",

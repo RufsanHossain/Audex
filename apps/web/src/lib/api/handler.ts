@@ -18,7 +18,7 @@ import type { ZodSchema } from "zod";
 export interface HandlerContext {
   /** The original Next.js request */
   req: NextRequest;
-  /** Request ID from x-request-id header (added by middleware) */
+  /** Request ID from x-request-id header (added by edge proxy) */
   requestId: string;
   /** Pino logger scoped to this request */
   log: Logger;
@@ -75,7 +75,7 @@ interface ResolvedUnauthContext<TBody, TQuery> extends Omit<
  * Higher-order function for API route handlers.
  *
  * Composable middleware chain:
- *   1. Extract request ID (from x-request-id header set by middleware)
+ *   1. Extract request ID (from x-request-id header set by edge proxy)
  *   2. Create scoped Pino logger with requestId, method, path
  *   3. (If requireAuth) Extract Auth.js session → AuthContext or 401
  *   4. (If rateLimit) Check tier-based rate limit → 429 with Retry-After
