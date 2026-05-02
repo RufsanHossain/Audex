@@ -4,6 +4,10 @@ import { ApiError } from "@audex/validators";
 
 import { jsonOk, withHandler } from "../../../../../lib/api/index.js";
 
+// Mongoose + auth() in withHandler — must run on Node, never cached.
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
+
 // ─── GET /api/v1/audits/:id ────────────────────────────────────────────────
 
 /**

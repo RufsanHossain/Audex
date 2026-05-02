@@ -17,6 +17,10 @@ import { roleToPlanTier } from "../../../../lib/api/plan.js";
 import type { DeviceType } from "@audex/types";
 import type { CreateAuditInput, ListAuditsInput } from "@audex/validators";
 
+// Mongoose + auth() in withHandler — must run on Node, never cached.
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
+
 // ─── Constants ─────────────────────────────────────────────────────────────
 
 const DEFAULT_AUDIT_TIMEOUT_MS = 90_000;

@@ -4,8 +4,10 @@ import { ApiError } from "@audex/validators";
 
 import { roleToPlanTier, withHandler } from "../../../../../../lib/api/index.js";
 
-// Force Node runtime — Edge runtime doesn't support full SSE on Vercel
+// Force Node runtime — Edge runtime doesn't support full SSE on Vercel.
+// Force dynamic — SSE streams must never be cached or pre-rendered.
 export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
 
 // ─── GET /api/v1/audits/:id/progress ───────────────────────────────────────
 
