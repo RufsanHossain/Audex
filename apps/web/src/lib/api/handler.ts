@@ -1,42 +1,17 @@
 import { extractAuth } from "@audex/auth";
 import { checkApiRateLimit, createRequestLogger, rateLimitHeaders } from "@audex/infra";
-import { PlanTier, UserRole } from "@audex/types";
 import { ApiError } from "@audex/validators";
 import { NextResponse } from "next/server";
 import { ZodError } from "zod";
 
 import { auth } from "../../auth";
 
+import { roleToPlanTier } from "./plan.js";
+
 import type { AuthContext } from "@audex/auth";
 import type { Logger } from "@audex/infra";
 import type { NextRequest } from "next/server";
 import type { ZodSchema } from "zod";
-
-// ─── Helpers ───────────────────────────────────────────────────────────────
-
-/**
- * Map a user's role to their effective rate-limit tier.
- * Admin gets enterprise-level limits.
- *
- * Note: this is a temporary mapping until we attach plan tier to AuthContext.
- * The User document has `plan.tier` which is the source of truth — this fallback
- * is used only when plan tier isn't available in the JWT.
- */
-function roleToPlanTier(role: UserRole): PlanTier {
-  switch (role) {
-    case UserRole.Admin:
-      return PlanTier.Enterprise;
-    case UserRole.Enterprise:
-      return PlanTier.Enterprise;
-    case UserRole.Team:
-      return PlanTier.Team;
-    case UserRole.Pro:
-      return PlanTier.Pro;
-    case UserRole.Free:
-    default:
-      return PlanTier.Free;
-  }
-}
 
 // ─── Types ─────────────────────────────────────────────────────────────────
 
