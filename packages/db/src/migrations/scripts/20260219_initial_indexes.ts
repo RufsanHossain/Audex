@@ -8,9 +8,8 @@ export const migration: Migration = {
 
   async up(db: Db): Promise<void> {
     // ── Users ─────────────────────────────────────────────────────────────
-    await db
-      .collection("users")
-      .createIndex({ email: 1 }, { unique: true, name: "idx_users_email" });
+    // email unique index is declared on the schema (User.email: { unique: true })
+    // and created by Mongoose autoIndex; not duplicated here.
     await db.collection("users").createIndex(
       { "plan.stripeCustomerId": 1 },
       {
@@ -45,17 +44,15 @@ export const migration: Migration = {
       .createIndex({ userId: 1, createdAt: -1 }, { name: "idx_projects_user_created" });
 
     // ── API Keys ──────────────────────────────────────────────────────────
-    await db
-      .collection("apiKeys")
-      .createIndex({ keyHash: 1 }, { unique: true, name: "idx_apikeys_hash" });
+    // keyHash unique index is declared on the schema (ApiKey.keyHash: { unique: true })
+    // and created by Mongoose autoIndex; not duplicated here.
     await db
       .collection("apiKeys")
       .createIndex({ userId: 1, isActive: 1 }, { name: "idx_apikeys_user_active" });
 
     // ── Subscriptions ─────────────────────────────────────────────────────
-    await db
-      .collection("subscriptions")
-      .createIndex({ userId: 1 }, { unique: true, name: "idx_subscriptions_user" });
+    // userId unique index is declared on the schema (Subscription.userId: { unique: true })
+    // and created by Mongoose autoIndex; not duplicated here.
     await db.collection("subscriptions").createIndex(
       { stripeSubscriptionId: 1 },
       {
@@ -95,7 +92,6 @@ export const migration: Migration = {
 
   async down(db: Db): Promise<void> {
     const drops: [string, string][] = [
-      ["users", "idx_users_email"],
       ["users", "idx_users_stripe_customer"],
       ["users", "idx_users_role"],
       ["users", "idx_users_created"],
@@ -104,9 +100,7 @@ export const migration: Migration = {
       ["reports", "idx_reports_project_created"],
       ["projects", "idx_projects_user_slug"],
       ["projects", "idx_projects_user_created"],
-      ["apiKeys", "idx_apikeys_hash"],
       ["apiKeys", "idx_apikeys_user_active"],
-      ["subscriptions", "idx_subscriptions_user"],
       ["subscriptions", "idx_subscriptions_stripe"],
       ["webhooks", "idx_webhooks_user"],
       ["notifications", "idx_notifications_user_read"],
