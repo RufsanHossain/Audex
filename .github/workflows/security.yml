@@ -54,25 +54,26 @@ jobs:
         with:
           extra_args: --only-verified
 
-  codeql:
-    name: CodeQL Analysis
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-
-    permissions:
-      security-events: write
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Initialize CodeQL
-        uses: github/codeql-action/init@v3
-        with:
-          languages: javascript-typescript
-
-      - name: Perform CodeQL analysis
-        uses: github/codeql-action/analyze@v3
+  # CodeQL is disabled until the repo is public or GitHub Advanced Security
+  # is enabled. With neither, the analyze step fails with "repository not
+  # found" because the Code Scanning API rejects SARIF uploads. Re-enable
+  # by restoring the `codeql:` job below.
+  #
+  # codeql:
+  #   name: CodeQL Analysis
+  #   runs-on: ubuntu-latest
+  #   timeout-minutes: 10
+  #   permissions:
+  #     security-events: write
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v4
+  #     - name: Initialize CodeQL
+  #       uses: github/codeql-action/init@v3
+  #       with:
+  #         languages: javascript-typescript
+  #     - name: Perform CodeQL analysis
+  #       uses: github/codeql-action/analyze@v3
 
   license-check:
     name: License Compliance
