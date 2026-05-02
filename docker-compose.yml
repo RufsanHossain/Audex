@@ -1,31 +1,52 @@
+name: audex
+
 services:
   mongodb:
     image: mongo:8
     container_name: audex-mongodb
+    restart: unless-stopped
     ports:
       - "27017:27017"
     volumes:
       - audex-mongo-data:/data/db
     environment:
       MONGO_INITDB_DATABASE: audex
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.runCommand({ ping: 1 }).ok"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
 
   redis:
     image: redis:7-alpine
     container_name: audex-redis
+    restart: unless-stopped
     ports:
       - "6379:6379"
     volumes:
       - audex-redis-data:/data
+    command: ["redis-server", "--appendonly", "yes", "--maxmemory-policy", "allkeys-lru"]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 5s
 
   mongo-express:
     image: mongo-express:latest
     container_name: audex-mongo-express
+    restart: unless-stopped
     ports:
       - "8081:8081"
     environment:
       ME_CONFIG_MONGODB_URL: mongodb://mongodb:27017/
+      ME_CONFIG_BASICAUTH_USERNAME: ${MONGO_EXPRESS_USER:-admin}
+      ME_CONFIG_BASICAUTH_PASSWORD: ${MONGO_EXPRESS_PASSWORD:-admin}
     depends_on:
-      - mongodb
+      mongodb:
+        condition: service_healthy
 
 volumes:
   audex-mongo-data:
