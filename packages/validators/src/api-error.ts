@@ -115,6 +115,14 @@ export class ApiError extends Error {
     );
   }
 
+  /** 429 — Concurrent audit slot limit reached */
+  static concurrencyLimitExceeded(active: number, limit: number): ApiError {
+    return new ApiError(
+      "RATE_LIMITED",
+      `Concurrent audit limit reached (${active}/${limit}). Wait for an audit to complete.`,
+    );
+  }
+
   /** 413 — Payload too large */
   static payloadTooLarge(maxSizeMb: number): ApiError {
     return new ApiError("PAYLOAD_TOO_LARGE", `Payload exceeds the ${maxSizeMb}MB limit`);

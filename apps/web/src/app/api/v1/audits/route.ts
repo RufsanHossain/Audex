@@ -63,7 +63,9 @@ export const POST = withHandler({ body: createAuditSchema }, async ({ auth, body
   // 1. RBAC
   const permErr = requirePermission(auth, Permission.AuditCreate);
   if (permErr) {
-    throw new ApiError(permErr.code, permErr.message);
+    throw permErr.code === "UNAUTHORIZED"
+      ? ApiError.unauthorized(permErr.message)
+      : ApiError.forbidden(permErr.message);
   }
 
   const tier = roleToPlanTier(auth.role);
@@ -93,10 +95,7 @@ export const POST = withHandler({ body: createAuditSchema }, async ({ auth, body
 
   const slot = await acquireAuditSlot(auth.userId, auditId, tier);
   if (!slot.acquired) {
-    throw new ApiError(
-      "RATE_LIMITED",
-      `Concurrent audit limit reached (${slot.active}/${slot.limit}). Wait for an audit to complete.`,
-    );
+    throw ApiError.concurrencyLimitExceeded(slot.active, slot.limit);
   }
 
   try {
