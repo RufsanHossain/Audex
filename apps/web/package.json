@@ -15,6 +15,7 @@
     "@audex/db": "workspace:*",
     "@audex/env": "workspace:*",
     "@audex/infra": "workspace:*",
+    "@audex/realtime": "workspace:*",
     "@audex/types": "workspace:*",
     "@audex/ui": "workspace:*",
     "@audex/validators": "workspace:*",

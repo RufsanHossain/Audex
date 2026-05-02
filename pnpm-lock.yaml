@@ -140,6 +140,9 @@ importers:
       '@audex/infra':
         specifier: workspace:*
         version: link:../../packages/infra
+      '@audex/realtime':
+        specifier: workspace:*
+        version: link:../../packages/realtime
       '@audex/types':
         specifier: workspace:*
         version: link:../../packages/types
