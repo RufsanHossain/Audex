@@ -9,7 +9,7 @@ import "./plugins.js";
 
 // ── Connection ──────────────────────────────────────────────────────────────
 
-export { connectDb, disconnectDb } from "./connection.js";
+export { connectDb, disconnectDb, pingDb } from "./connection.js";
 
 // ── Embedded Schemas ────────────────────────────────────────────────────────
 

@@ -81,6 +81,25 @@ export async function connectDb(): Promise<typeof mongoose> {
   return cached.conn;
 }
 
+// ── Health Check ────────────────────────────────────────────────────────────
+
+/**
+ * Health check — returns latency in ms or null if unavailable.
+ * Issues `db.runCommand({ ping: 1 })` against the admin db.
+ */
+export async function pingDb(): Promise<number | null> {
+  try {
+    await connectDb();
+    const admin = mongoose.connection.db?.admin();
+    if (!admin) return null;
+    const start = Date.now();
+    await admin.ping();
+    return Date.now() - start;
+  } catch {
+    return null;
+  }
+}
+
 // ── Disconnect (for tests and graceful shutdown) ────────────────────────────
 
 export async function disconnectDb(): Promise<void> {
