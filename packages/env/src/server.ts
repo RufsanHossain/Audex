@@ -22,7 +22,7 @@ const port = z.coerce.number().int().min(1).max(65535).default(3000);
 // Validated at process startup. If any required variable is missing or
 // malformed, the process crashes immediately with a descriptive error.
 
-const serverEnvSchema = z.object({
+const serverEnvBaseSchema = z.object({
   // ── Core ────────────────────────────────────────────────────────────────
   NODE_ENV: z.enum(["development", "staging", "production", "test"]).default("development"),
   PORT: port,
@@ -83,6 +83,18 @@ const serverEnvSchema = z.object({
   HEALTH_PORT: z.coerce.number().int().min(1).max(65535).default(8080),
   MEMORY_LIMIT_MB: z.coerce.number().int().min(256).default(1800),
 });
+
+// OAuth client ID and secret must be set as a pair — a half-configured
+// provider would silently fail at sign-in time rather than at startup.
+const serverEnvSchema = serverEnvBaseSchema
+  .refine((env) => Boolean(env.AUTH_GOOGLE_ID) === Boolean(env.AUTH_GOOGLE_SECRET), {
+    message: "AUTH_GOOGLE_ID and AUTH_GOOGLE_SECRET must both be set or both omitted",
+    path: ["AUTH_GOOGLE_SECRET"],
+  })
+  .refine((env) => Boolean(env.AUTH_GITHUB_ID) === Boolean(env.AUTH_GITHUB_SECRET), {
+    message: "AUTH_GITHUB_ID and AUTH_GITHUB_SECRET must both be set or both omitted",
+    path: ["AUTH_GITHUB_SECRET"],
+  });
 
 // ─── Parse & Export ─────────────────────────────────────────────────────────
 
