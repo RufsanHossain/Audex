@@ -4,11 +4,14 @@ import { z } from "zod";
 
 import { objectIdSchema, paginationSchema, safeStringSchema } from "./common.js";
 import { webhookEventSchema } from "./enums.js";
+import { safeExternalUrlSchema } from "./url-sanitizer.js";
 
 // ── Create Webhook ──────────────────────────────────────────────────────────
 
 export const createWebhookSchema = z.object({
-  url: z.string().url("Invalid webhook URL").max(2048),
+  // SSRF-protected URL: blocks loopback, private IPs, cloud metadata
+  // endpoints, internal DB ports, and non-http(s) schemes.
+  url: safeExternalUrlSchema,
   events: z.array(webhookEventSchema).min(1, "At least one event is required").max(10),
   projectId: objectIdSchema.optional(),
   description: safeStringSchema(0, 300).optional(),
@@ -19,7 +22,7 @@ export const createWebhookSchema = z.object({
 
 export const updateWebhookSchema = z.object({
   id: objectIdSchema,
-  url: z.string().url().max(2048).optional(),
+  url: safeExternalUrlSchema.optional(),
   events: z.array(webhookEventSchema).min(1).max(10).optional(),
   description: safeStringSchema(0, 300).optional(),
   isActive: z.boolean().optional(),

@@ -107,6 +107,13 @@ export const auditUrlSchema = z
     { message: "Private IP addresses are not allowed" },
   );
 
+/**
+ * Generic SSRF-safe external URL schema.
+ * Same rules as auditUrlSchema — exported under a generic name so non-audit
+ * callers (webhooks, redirect URIs, etc.) read clearly at the call site.
+ */
+export const safeExternalUrlSchema = auditUrlSchema;
+
 // ── Async DNS Resolution (call after Zod validation passes) ─────────────────
 
 export interface UrlValidationResult {

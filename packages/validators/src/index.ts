@@ -45,7 +45,12 @@ export {
 } from "./common.js";
 
 // ── URL Sanitizer ───────────────────────────────────────────────────────────
-export { auditUrlSchema, isPrivateIp, resolveAndValidateUrl } from "./url-sanitizer.js";
+export {
+  auditUrlSchema,
+  safeExternalUrlSchema,
+  isPrivateIp,
+  resolveAndValidateUrl,
+} from "./url-sanitizer.js";
 export type { UrlValidationResult } from "./url-sanitizer.js";
 
 // ── File Path Validator ─────────────────────────────────────────────────────
