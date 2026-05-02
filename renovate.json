@@ -1,0 +1,121 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended",
+    ":semanticCommits",
+    ":semanticCommitTypeAll(deps)",
+    ":dependencyDashboard",
+    ":timezone(UTC)"
+  ],
+  "schedule": ["before 6am on monday"],
+  "labels": ["dependencies"],
+  "rangeStrategy": "bump",
+  "prConcurrentLimit": 5,
+  "prHourlyLimit": 2,
+  "rebaseWhen": "conflicted",
+  "lockFileMaintenance": {
+    "enabled": true,
+    "schedule": ["before 6am on monday"]
+  },
+  "vulnerabilityAlerts": {
+    "enabled": true,
+    "labels": ["security", "dependencies"],
+    "schedule": []
+  },
+  "packageRules": [
+    {
+      "description": "Auto-merge patch updates for devDependencies",
+      "matchDepTypes": ["devDependencies"],
+      "matchUpdateTypes": ["patch"],
+      "automerge": true,
+      "automergeType": "pr",
+      "platformAutomerge": true
+    },
+    {
+      "description": "Auto-merge patch updates for catalog devDependencies",
+      "matchManagers": ["pnpm-workspace-yaml"],
+      "matchUpdateTypes": ["patch"],
+      "automerge": true,
+      "automergeType": "pr",
+      "platformAutomerge": true
+    },
+    {
+      "description": "Group React ecosystem",
+      "matchPackagePatterns": ["^react", "^@types/react"],
+      "groupName": "react"
+    },
+    {
+      "description": "Group Next.js",
+      "matchPackagePatterns": ["^next", "^@next/", "next-themes", "next-auth"],
+      "groupName": "next.js"
+    },
+    {
+      "description": "Group Tailwind CSS",
+      "matchPackagePatterns": ["^tailwindcss", "^@tailwindcss/", "tw-animate-css"],
+      "groupName": "tailwind"
+    },
+    {
+      "description": "Group Radix UI",
+      "matchPackagePatterns": ["^@radix-ui/"],
+      "groupName": "radix-ui"
+    },
+    {
+      "description": "Group ESLint ecosystem",
+      "matchPackagePatterns": ["eslint", "^@eslint/", "^@typescript-eslint/", "^eslint-"],
+      "groupName": "eslint",
+      "matchUpdateTypes": ["minor", "patch"]
+    },
+    {
+      "description": "Group commitlint",
+      "matchPackagePatterns": ["^@commitlint/"],
+      "groupName": "commitlint"
+    },
+    {
+      "description": "Group MongoDB ecosystem",
+      "matchPackageNames": ["mongoose", "mongodb"],
+      "groupName": "mongodb"
+    },
+    {
+      "description": "Group Sentry",
+      "matchPackagePatterns": ["^@sentry/"],
+      "groupName": "sentry"
+    },
+    {
+      "description": "Group Vitest",
+      "matchPackagePatterns": ["^vitest", "^@vitest/"],
+      "groupName": "vitest"
+    },
+    {
+      "description": "Group Playwright",
+      "matchPackagePatterns": ["^playwright", "^@playwright/"],
+      "groupName": "playwright"
+    },
+    {
+      "description": "Pin GitHub Actions",
+      "matchManagers": ["github-actions"],
+      "pinDigests": true
+    },
+    {
+      "description": "Group GitHub Actions updates",
+      "matchManagers": ["github-actions"],
+      "groupName": "github-actions",
+      "matchUpdateTypes": ["minor", "patch", "digest"],
+      "automerge": true,
+      "platformAutomerge": true
+    },
+    {
+      "description": "Slow major updates — manual review only",
+      "matchUpdateTypes": ["major"],
+      "automerge": false,
+      "labels": ["major-update", "needs-review"]
+    },
+    {
+      "description": "Don't bump Node engine version",
+      "matchPackageNames": ["node"],
+      "matchManagers": ["npm"],
+      "enabled": false
+    }
+  ],
+  "ignorePaths": ["**/node_modules/**", "**/dist/**", "**/.next/**"],
+  "postUpdateOptions": ["pnpmDedupe"]
+}
