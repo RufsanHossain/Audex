@@ -30,6 +30,34 @@ export function userChannel(userId: string): string {
 
 let subscriber: Redis | null = null;
 
+// Per-channel handler registry. Multiple subscribe() calls for the same
+// channel share a single Redis-level subscription and fan out via this map;
+// the channel is only unsubscribed at the Redis level when its handler set
+// becomes empty.
+const channelHandlers = new Map<string, Set<MessageHandler>>();
+
+function dispatchMessage(channel: string, message: string): void {
+  const handlers = channelHandlers.get(channel);
+  if (!handlers || handlers.size === 0) return;
+
+  let envelope: SSEEnvelope;
+  try {
+    envelope = JSON.parse(message) as SSEEnvelope;
+  } catch (err) {
+    console.error("[infra:pubsub] Failed to parse message:", err);
+    return;
+  }
+
+  // Snapshot handlers in case one of them unsubscribes synchronously.
+  for (const handler of [...handlers]) {
+    try {
+      handler(envelope);
+    } catch (err) {
+      console.error("[infra:pubsub] Handler threw:", err);
+    }
+  }
+}
+
 /**
  * Get a dedicated Redis connection for Pub/Sub subscriptions.
  *
@@ -58,6 +86,10 @@ function getSubscriber(): Redis | null {
   subscriber.on("error", (err: Error) => {
     console.error("[infra:pubsub] Subscriber connection error:", err.message);
   });
+
+  // Single shared dispatcher — keeps EventEmitter listener count at 1
+  // regardless of how many subscribe() calls are active.
+  subscriber.on("message", dispatchMessage);
 
   return subscriber;
 }
@@ -124,6 +156,10 @@ type MessageHandler = (envelope: SSEEnvelope) => void;
  *
  * Returns an unsubscribe function for cleanup.
  * The handler receives parsed SSEEnvelope objects.
+ *
+ * Multiple subscribe() calls for the same channel share a single
+ * Redis-level subscription. The channel is only unsubscribed at the
+ * Redis level when the last handler removes itself.
  */
 export async function subscribe(
   channel: string,
@@ -135,22 +171,27 @@ export async function subscribe(
     return () => Promise.resolve();
   }
 
-  const messageHandler = (ch: string, message: string) => {
-    if (ch !== channel) return;
-    try {
-      const envelope = JSON.parse(message) as SSEEnvelope;
-      handler(envelope);
-    } catch (err) {
-      console.error("[infra:pubsub] Failed to parse message:", err);
-    }
-  };
+  let handlers = channelHandlers.get(channel);
+  const isFirstHandler = !handlers || handlers.size === 0;
+  if (!handlers) {
+    handlers = new Set<MessageHandler>();
+    channelHandlers.set(channel, handlers);
+  }
+  handlers.add(handler);
 
-  sub.on("message", messageHandler);
-  await sub.subscribe(channel);
+  // Only issue the Redis-level subscribe on the transition 0 → 1.
+  if (isFirstHandler) {
+    await sub.subscribe(channel);
+  }
 
   return async () => {
-    sub.off("message", messageHandler);
-    await sub.unsubscribe(channel).catch(() => undefined);
+    const set = channelHandlers.get(channel);
+    if (!set) return;
+    set.delete(handler);
+    if (set.size === 0) {
+      channelHandlers.delete(channel);
+      await sub.unsubscribe(channel).catch(() => undefined);
+    }
   };
 }
 
@@ -180,6 +221,7 @@ export async function subscribeToUser(
  * Disconnect the subscriber connection (for graceful shutdown).
  */
 export async function disconnectSubscriber(): Promise<void> {
+  channelHandlers.clear();
   if (subscriber) {
     await subscriber.quit();
     subscriber = null;
