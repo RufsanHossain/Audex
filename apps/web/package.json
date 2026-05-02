@@ -8,7 +8,8 @@
     "build": "next build --webpack",
     "start": "next start",
     "lint": "eslint src/",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "test:integration": "vitest run"
   },
   "dependencies": {
     "@audex/auth": "workspace:*",
