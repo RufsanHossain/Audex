@@ -17,10 +17,10 @@
     "clean": "rm -rf dist"
   },
   "dependencies": {
-    "zod": "^3.24.2"
+    "zod": "catalog:"
   },
   "devDependencies": {
     "@audex/types": "workspace:*",
-    "typescript": "^5.8.2"
+    "typescript": "catalog:"
   }
 }

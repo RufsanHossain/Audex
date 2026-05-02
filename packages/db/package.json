@@ -23,6 +23,6 @@
   "devDependencies": {
     "@audex/env": "workspace:*",
     "@audex/types": "workspace:*",
-    "typescript": "^5.8.2"
+    "typescript": "catalog:"
   }
 }

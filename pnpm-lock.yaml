@@ -236,7 +236,7 @@ importers:
         specifier: workspace:*
         version: link:../types
       typescript:
-        specifier: ^5.8.2
+        specifier: 'catalog:'
         version: 5.9.3
 
   packages/env:
@@ -334,14 +334,14 @@ importers:
   packages/validators:
     dependencies:
       zod:
-        specifier: ^3.24.2
+        specifier: 'catalog:'
         version: 3.25.76
     devDependencies:
       '@audex/types':
         specifier: workspace:*
         version: link:../types
       typescript:
-        specifier: ^5.8.2
+        specifier: 'catalog:'
         version: 5.9.3
 
   packages/workers: {}
