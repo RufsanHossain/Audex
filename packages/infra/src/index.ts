@@ -45,6 +45,7 @@ export {
 } from "./rate-limit.js";
 export type { RateLimitResult } from "./rate-limit.js";
 export { logger, createLogger, createRequestLogger, createWorkerLogger } from "./logger.js";
+export type { Logger } from "pino";
 export {
   writeAuditLog,
   logAuth,

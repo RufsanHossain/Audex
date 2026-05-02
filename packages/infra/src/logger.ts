@@ -4,7 +4,8 @@ import type { Logger } from "pino";
 
 // ─── Config ────────────────────────────────────────────────────────────────
 
-const isDev = process.env["NODE_ENV"] !== "production" && process.env["NODE_ENV"] !== "staging";
+const nodeEnv: string = process.env["NODE_ENV"] ?? "development";
+const isDev = nodeEnv !== "production" && nodeEnv !== "staging";
 
 const level = process.env["LOG_LEVEL"] ?? (isDev ? "debug" : "info");
 

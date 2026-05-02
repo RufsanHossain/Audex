@@ -14,13 +14,15 @@
     "@audex/auth": "workspace:*",
     "@audex/db": "workspace:*",
     "@audex/env": "workspace:*",
+    "@audex/infra": "workspace:*",
     "@audex/types": "workspace:*",
+    "@audex/ui": "workspace:*",
     "@audex/validators": "workspace:*",
     "next": "catalog:",
     "next-auth": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
-    "@audex/ui": "workspace:*"
+    "zod": "catalog:"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "catalog:",
