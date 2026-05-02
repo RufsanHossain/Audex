@@ -86,9 +86,10 @@ const defaultJobOptions: Record<QueueName, JobsOptions> = {
   },
 };
 
-// ─── Queue Factory ─────────────────────────────────────────────────────────
+// ─── Queue + Worker Registries ─────────────────────────────────────────────
 
 const queues = new Map<string, Queue>();
+const workers = new Set<Worker>();
 
 /**
  * Get or create a typed BullMQ queue.
@@ -118,7 +119,8 @@ export function getQueue<N extends QueueName>(name: N): Queue<QueueJobDataMap[N]
  * Create a typed BullMQ worker for a specific queue.
  *
  * Unlike queues, workers are NOT singletons — each call creates a new worker.
- * The caller is responsible for worker lifecycle (close on shutdown).
+ * Workers are auto-registered for shutdown via closeAllWorkers() / closeAll();
+ * callers may also close them manually (the registry self-cleans on `closed`).
  */
 export function createWorker<N extends QueueName>(
   name: N,
@@ -128,11 +130,18 @@ export function createWorker<N extends QueueName>(
   const connection = getQueueConnection();
   if (!connection) return null;
 
-  return new Worker<QueueJobDataMap[N]>(name, processor, {
+  const worker = new Worker<QueueJobDataMap[N]>(name, processor, {
     connection,
     concurrency: 1,
     ...options,
   });
+
+  workers.add(worker);
+  worker.on("closed", () => {
+    workers.delete(worker);
+  });
+
+  return worker;
 }
 
 // ─── Job Helpers ───────────────────────────────────────────────────────────
@@ -189,9 +198,35 @@ export async function addJob<N extends QueueName>(
 
 /**
  * Close all queue connections (for graceful shutdown).
+ * Does NOT close workers — call closeAllWorkers() or closeAll() for that.
  */
 export async function closeAllQueues(): Promise<void> {
   const closePromises = Array.from(queues.values()).map((q) => q.close());
   await Promise.all(closePromises);
   queues.clear();
+}
+
+/**
+ * Close all workers (for graceful shutdown).
+ *
+ * Workers are auto-registered when created via createWorker(); this drains
+ * in-flight jobs and disconnects each worker's Redis connection.
+ */
+export async function closeAllWorkers(): Promise<void> {
+  // Snapshot first — worker.close() triggers the `closed` listener which
+  // mutates the Set during iteration.
+  const snapshot = Array.from(workers);
+  await Promise.all(snapshot.map((w) => w.close()));
+  workers.clear();
+}
+
+/**
+ * Graceful shutdown of the entire BullMQ layer.
+ *
+ * Workers close first so any in-flight job can complete before the queue
+ * connection it depends on is torn down.
+ */
+export async function closeAll(): Promise<void> {
+  await closeAllWorkers();
+  await closeAllQueues();
 }

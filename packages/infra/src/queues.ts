@@ -144,6 +144,9 @@ export async function getTotalQueueDepth(): Promise<number> {
 }
 
 /**
- * Graceful shutdown: close all queues.
+ * Graceful shutdown helpers.
+ * - closeAllQueues: close just the queue connections.
+ * - closeAllWorkers: close just the workers (drain in-flight jobs).
+ * - closeAll: workers first, then queues — the standard shutdown entry point.
  */
-export { closeAllQueues } from "./queue.js";
+export { closeAllQueues, closeAllWorkers, closeAll } from "./queue.js";

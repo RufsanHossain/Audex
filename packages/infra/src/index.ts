@@ -16,6 +16,8 @@ export {
   getPlanPriority,
   addJob,
   closeAllQueues,
+  closeAllWorkers,
+  closeAll,
 } from "./queue.js";
 export {
   enqueueUrlAudit,
