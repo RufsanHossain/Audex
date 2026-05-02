@@ -6,7 +6,6 @@ import {
   DimensionId,
   Grade,
   FindingSeverity,
-  EngineStatus,
 } from "@audex/types";
 import { Types } from "mongoose";
 
@@ -52,7 +51,7 @@ export const users = [
     auditLimit: -1, // unlimited
     settings: {
       defaultDevice: DeviceType.Desktop,
-      notifications: { email: true, inApp: true },
+      notifications: { auditComplete: true, weeklyDigest: true, billing: true },
     },
   },
   {
@@ -71,7 +70,7 @@ export const users = [
     auditLimit: 100,
     settings: {
       defaultDevice: DeviceType.Mobile,
-      notifications: { email: true, inApp: true },
+      notifications: { auditComplete: true, weeklyDigest: true, billing: true },
     },
   },
   {
@@ -85,7 +84,7 @@ export const users = [
     auditLimit: 5,
     settings: {
       defaultDevice: DeviceType.Desktop,
-      notifications: { email: false, inApp: true },
+      notifications: { auditComplete: true, weeklyDigest: false, billing: true },
     },
   },
   {
@@ -104,7 +103,7 @@ export const users = [
     auditLimit: 500,
     settings: {
       defaultDevice: DeviceType.Desktop,
-      notifications: { email: true, inApp: true },
+      notifications: { auditComplete: true, weeklyDigest: true, billing: true },
     },
   },
   {
@@ -118,7 +117,7 @@ export const users = [
     auditLimit: 500,
     settings: {
       defaultDevice: DeviceType.Mobile,
-      notifications: { email: true, inApp: false },
+      notifications: { auditComplete: true, weeklyDigest: true, billing: false },
     },
   },
 ];
@@ -216,7 +215,7 @@ function makeDimensionResult(dimension: DimensionId, score: number, findingCount
     findings,
     metrics: {},
     executionTimeMs: 800 + Math.floor(Math.random() * 2000),
-    status: EngineStatus.Complete,
+    status: "success" as const,
   };
 }
 
