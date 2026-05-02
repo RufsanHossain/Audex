@@ -91,6 +91,24 @@ const defaultJobOptions: Record<QueueName, JobsOptions> = {
 const queues = new Map<string, Queue>();
 const workers = new Set<Worker>();
 
+// ─── Worker Defaults ───────────────────────────────────────────────────────
+
+/**
+ * Default per-worker concurrency, sourced from WORKER_CONCURRENCY env
+ * (validated by @audex/env to be 1..20, default 3). Read at module load.
+ * Callers can still override via the `options` parameter to createWorker().
+ *
+ * process.env is read directly (rather than @audex/env) to keep @audex/infra
+ * free of an env-package dependency; the value is already validated where
+ * the env schema runs at app startup.
+ */
+const DEFAULT_WORKER_CONCURRENCY = (() => {
+  const raw = process.env["WORKER_CONCURRENCY"];
+  if (!raw) return 3;
+  const n = Number(raw);
+  return Number.isFinite(n) && n >= 1 && n <= 20 ? Math.floor(n) : 3;
+})();
+
 /**
  * Get or create a typed BullMQ queue.
  *
@@ -132,7 +150,7 @@ export function createWorker<N extends QueueName>(
 
   const worker = new Worker<QueueJobDataMap[N]>(name, processor, {
     connection,
-    concurrency: 1,
+    concurrency: DEFAULT_WORKER_CONCURRENCY,
     ...options,
   });
 
