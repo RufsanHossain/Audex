@@ -1,8 +1,11 @@
 import { PLAN_LIMITS } from "@audex/types";
 
+import { createLogger } from "./logger.js";
 import { getRedis } from "./redis.js";
 
 import type { PlanTier } from "@audex/types";
+
+const log = createLogger({ module: "concurrency" });
 
 // ─── Config ────────────────────────────────────────────────────────────────
 
@@ -75,8 +78,8 @@ export async function acquireAuditSlot(
 
     return { acquired: true, active: active + 1, limit };
   } catch (err) {
-    console.error("[infra:concurrency] Failed to acquire slot:", err);
-    // Fail open
+    // Intentionally fail open — see rate-limit.ts for the reasoning.
+    log.error({ err, userId, auditId }, "Failed to acquire slot; concurrency failing open");
     return { acquired: true, active: 0, limit };
   }
 }
@@ -97,7 +100,7 @@ export async function releaseAuditSlot(userId: string, auditId: string): Promise
     await redis.srem(setKey, auditId);
     await redis.del(memberKey);
   } catch (err) {
-    console.error("[infra:concurrency] Failed to release slot:", err);
+    log.error({ err, userId, auditId }, "Failed to release slot");
   }
 }
 

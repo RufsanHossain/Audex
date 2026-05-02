@@ -1,4 +1,7 @@
+import { createLogger } from "@audex/infra";
 import { getRedis } from "@audex/infra/redis";
+
+const log = createLogger({ module: "auth:revocation" });
 
 /**
  * Redis key for individual token revocation set.
@@ -36,7 +39,7 @@ export async function revokeToken(jti: string, expiresAt: number): Promise<void>
   try {
     await redis.zadd(REVOKED_TOKENS_KEY, expiresAt, jti);
   } catch (err) {
-    console.error("[auth:revocation] Failed to revoke token:", err);
+    log.error({ err, jti }, "Failed to revoke token");
   }
 }
 
@@ -77,7 +80,7 @@ export async function revokeAllUserSessions(userId: string): Promise<void> {
   try {
     await redis.set(`${USER_EPOCH_PREFIX}${userId}`, epoch.toString(), "EX", EPOCH_TTL_SECONDS);
   } catch (err) {
-    console.error("[auth:revocation] Failed to set user epoch:", err);
+    log.error({ err, userId }, "Failed to set user epoch");
   }
 }
 
@@ -152,11 +155,11 @@ export async function cleanupExpiredRevocations(): Promise<number> {
     // Remove all entries with score (expiration) <= now
     const removed = await redis.zremrangebyscore(REVOKED_TOKENS_KEY, "-inf", now);
     if (removed > 0) {
-      console.log(`[auth:revocation] Cleaned up ${removed} expired revocations`);
+      log.info({ removed }, "Cleaned up expired revocations");
     }
     return removed;
   } catch (err) {
-    console.error("[auth:revocation] Cleanup failed:", err);
+    log.error({ err }, "Cleanup failed");
     return 0;
   }
 }

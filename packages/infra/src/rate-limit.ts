@@ -1,6 +1,9 @@
 import { PlanTier } from "@audex/types";
 
+import { createLogger } from "./logger.js";
 import { getRedis } from "./redis.js";
+
+const log = createLogger({ module: "rate-limit" });
 
 // ─── Config ────────────────────────────────────────────────────────────────
 
@@ -120,8 +123,10 @@ export async function checkRateLimit(
       retryAfterSeconds,
     };
   } catch (err) {
-    console.error("[infra:rate-limit] Lua eval failed:", err);
-    // Fail open
+    // Intentionally fail open: locking everyone out on a Redis blip is worse
+    // than briefly serving past the rate limit. Logged at ERROR so an outage
+    // is visible in monitoring.
+    log.error({ err, key, limit }, "Lua eval failed; rate limit failing open");
     return { allowed: true, remaining: limit, resetAt: 0, limit, retryAfterSeconds: 0 };
   }
 }
