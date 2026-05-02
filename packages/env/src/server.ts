@@ -70,6 +70,11 @@ const serverEnvSchema = z.object({
 
   // ── Monitoring ──────────────────────────────────────────────────────────
   SENTRY_DSN: optionalString,
+  POSTHOG_API_KEY: optionalString,
+  POSTHOG_HOST: z.string().default("https://us.i.posthog.com"),
+
+  // ── Slack (Team+ webhooks) ──────────────────────────────────────────────
+  SLACK_WEBHOOK_URL: optionalString,
 
   // ── Workers ─────────────────────────────────────────────────────────────
   BROWSER_POOL_SIZE: z.coerce.number().int().min(1).max(10).default(3),
