@@ -99,6 +99,18 @@ vi.mock("@audex/infra", () => ({
     error: vi.fn(),
     debug: vi.fn(),
   }),
+  createLogger: () => ({
+    info: vi.fn(),
+    warn: vi.fn(),
+    error: vi.fn(),
+    debug: vi.fn(),
+    child: vi.fn(() => ({
+      info: vi.fn(),
+      warn: vi.fn(),
+      error: vi.fn(),
+      debug: vi.fn(),
+    })),
+  }),
   logAuditAction: vi.fn(),
   getQueue: () => null,
   getRedis: () => null,
