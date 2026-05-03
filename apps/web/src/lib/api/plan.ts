@@ -22,3 +22,15 @@ export function roleToPlanTier(role: UserRole): PlanTier {
       return PlanTier.Free;
   }
 }
+
+const PLAN_ORDER: Record<PlanTier, number> = {
+  [PlanTier.Free]: 0,
+  [PlanTier.Pro]: 1,
+  [PlanTier.Team]: 2,
+  [PlanTier.Enterprise]: 3,
+};
+
+/** True if `actual` is at least the `minimum` plan tier. */
+export function isMinPlan(actual: PlanTier, minimum: PlanTier): boolean {
+  return PLAN_ORDER[actual] >= PLAN_ORDER[minimum];
+}

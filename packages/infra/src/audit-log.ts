@@ -143,6 +143,20 @@ export function logApiKeyAction(
   writeAuditLog({ ...ctx, action: actionMap[action], metadata });
 }
 
+/** Log a webhook action */
+export function logWebhookAction(
+  ctx: RequestContext,
+  action: "create" | "delete",
+  metadata?: Record<string, unknown>,
+): void {
+  const actionMap = {
+    create: AuditLogAction.WebhookCreate,
+    delete: AuditLogAction.WebhookDelete,
+  } as const;
+
+  writeAuditLog({ ...ctx, action: actionMap[action], metadata });
+}
+
 /** Log a project action */
 export function logProjectAction(
   ctx: RequestContext,

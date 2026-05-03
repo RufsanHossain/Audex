@@ -55,6 +55,7 @@ export {
   logReportAction,
   logApiKeyAction,
   logProjectAction,
+  logWebhookAction,
   logSettingsChange,
   logPlanChange,
   logTeamAction,
