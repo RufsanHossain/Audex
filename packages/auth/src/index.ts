@@ -66,3 +66,6 @@ export {
   revokeAllUserSessions,
   revokeToken,
 } from "./revocation.js";
+
+// ── Password ────────────────────────────────────────────────────────────────
+export { hashPassword, verifyPassword } from "./password.js";

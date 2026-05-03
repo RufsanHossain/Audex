@@ -259,6 +259,7 @@ export enum AuditLogAction {
   AuthLogout = "auth.logout",
   AuthFailedLogin = "auth.failed_login",
   AuthPasswordReset = "auth.password_reset",
+  AuthPasswordChange = "auth.password_change",
   AuditCreate = "audit.create",
   AuditCancel = "audit.cancel",
   ReportView = "report.view",

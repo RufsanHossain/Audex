@@ -86,7 +86,7 @@ interface RequestContext {
 /** Log an auth action */
 export function logAuth(
   ctx: RequestContext,
-  action: "login" | "logout" | "failed_login" | "password_reset",
+  action: "login" | "logout" | "failed_login" | "password_reset" | "password_change",
   metadata?: Record<string, unknown>,
 ): void {
   const actionMap = {
@@ -94,6 +94,7 @@ export function logAuth(
     logout: AuditLogAction.AuthLogout,
     failed_login: AuditLogAction.AuthFailedLogin,
     password_reset: AuditLogAction.AuthPasswordReset,
+    password_change: AuditLogAction.AuthPasswordChange,
   } as const;
 
   writeAuditLog({ ...ctx, action: actionMap[action], metadata });
