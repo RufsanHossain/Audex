@@ -108,6 +108,7 @@ export {
   loginSchema,
   resetPasswordSchema,
   signupSchema,
+  updateMeSchema,
   updateProfileSchema,
   updateSettingsSchema,
 } from "./user.js";
@@ -119,6 +120,7 @@ export type {
   LoginInput,
   ResetPasswordInput,
   SignupInput,
+  UpdateMeInput,
   UpdateProfileInput,
   UpdateSettingsInput,
 } from "./user.js";

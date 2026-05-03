@@ -71,9 +71,27 @@ export const updateSettingsSchema = z.object({
   notifications: z
     .object({
       auditComplete: z.boolean().optional(),
-      scoreRegression: z.boolean().optional(),
       weeklyDigest: z.boolean().optional(),
-      marketingEmails: z.boolean().optional(),
+      billing: z.boolean().optional(),
+    })
+    .optional(),
+});
+
+// ── Update Me (combined profile + settings) ─────────────────────────────────
+
+export const updateMeSchema = z.object({
+  name: safeStringSchema(2, 100).optional(),
+  image: z.string().url().max(2048).optional(),
+  settings: z
+    .object({
+      defaultDevice: deviceTypeSchema.optional(),
+      notifications: z
+        .object({
+          auditComplete: z.boolean().optional(),
+          weeklyDigest: z.boolean().optional(),
+          billing: z.boolean().optional(),
+        })
+        .optional(),
     })
     .optional(),
 });
@@ -124,6 +142,7 @@ export type ForgotPasswordInput = z.infer<typeof forgotPasswordSchema>;
 export type ResetPasswordInput = z.infer<typeof resetPasswordSchema>;
 export type UpdateProfileInput = z.infer<typeof updateProfileSchema>;
 export type UpdateSettingsInput = z.infer<typeof updateSettingsSchema>;
+export type UpdateMeInput = z.infer<typeof updateMeSchema>;
 export type ChangePasswordInput = z.infer<typeof changePasswordSchema>;
 export type AdminListUsersInput = z.infer<typeof adminListUsersSchema>;
 export type AdminUpdateUserRoleInput = z.infer<typeof adminUpdateUserRoleSchema>;
