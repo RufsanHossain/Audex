@@ -139,6 +139,10 @@ export type {
   UpdateApiKeyInput,
 } from "./api-key.js";
 
+// ── Notification Schemas ────────────────────────────────────────────────────
+export { listNotificationsSchema, notificationParamsSchema } from "./notification.js";
+export type { ListNotificationsInput, NotificationParams } from "./notification.js";
+
 // ── Webhook Schemas ─────────────────────────────────────────────────────────
 export {
   createWebhookSchema,
