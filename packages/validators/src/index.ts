@@ -141,6 +141,10 @@ export type {
   UpdateApiKeyInput,
 } from "./api-key.js";
 
+// ── Billing Schemas ─────────────────────────────────────────────────────────
+export { checkoutSchema } from "./billing.js";
+export type { CheckoutInput } from "./billing.js";
+
 // ── Notification Schemas ────────────────────────────────────────────────────
 export { listNotificationsSchema, notificationParamsSchema } from "./notification.js";
 export type { ListNotificationsInput, NotificationParams } from "./notification.js";
