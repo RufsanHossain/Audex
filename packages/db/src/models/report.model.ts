@@ -43,6 +43,9 @@ export interface IReportDoc extends Document {
   };
   completedAt?: Date;
   duration?: number;
+  shareSlug?: string;
+  shareAccess?: "public" | "unlisted" | "private";
+  sharedAt?: Date;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -95,6 +98,9 @@ const ReportSchema = new Schema<IReportDoc>(
     },
     completedAt: { type: Date },
     duration: { type: Number },
+    shareSlug: { type: String, maxlength: 32 },
+    shareAccess: { type: String, enum: ["public", "unlisted", "private"] },
+    sharedAt: { type: Date },
   },
   {
     timestamps: true,
@@ -116,6 +122,9 @@ ReportSchema.index({ status: 1 });
 // TTL — free tier 30-day retention (set via migration, not here,
 // because TTL value differs per environment). Placeholder index:
 ReportSchema.index({ createdAt: 1 });
+
+// Public share lookup — sparse so unshared reports don't take up index space
+ReportSchema.index({ shareSlug: 1 }, { unique: true, sparse: true });
 
 // ── Export ───────────────────────────────────────────────────────────────────
 
