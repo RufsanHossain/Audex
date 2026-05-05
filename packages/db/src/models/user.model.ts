@@ -29,6 +29,9 @@ export interface IUserDoc extends Document {
       billing: boolean;
     };
   };
+  disabled: boolean;
+  disabledAt?: Date;
+  disabledReason?: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -74,6 +77,9 @@ const UserSchema = new Schema<IUserDoc>(
         billing: { type: Boolean, default: true },
       },
     },
+    disabled: { type: Boolean, default: false },
+    disabledAt: { type: Date },
+    disabledReason: { type: String, maxlength: 500 },
   },
   {
     timestamps: true,

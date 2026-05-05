@@ -134,6 +134,19 @@ export const adminUpdateUserRoleSchema = z.object({
   role: z.enum(["free", "pro", "team", "enterprise", "admin"]),
 });
 
+// ── Admin: Update Role Body (id from URL) ───────────────────────────────────
+
+export const adminUpdateRoleBodySchema = z.object({
+  role: z.enum(["free", "pro", "team", "enterprise", "admin"]),
+});
+
+// ── Admin: Disable User ─────────────────────────────────────────────────────
+
+export const adminDisableUserSchema = z.object({
+  disabled: z.boolean(),
+  reason: z.string().max(500).optional(),
+});
+
 // ── Type Exports ────────────────────────────────────────────────────────────
 
 export type SignupInput = z.infer<typeof signupSchema>;
@@ -146,3 +159,5 @@ export type UpdateMeInput = z.infer<typeof updateMeSchema>;
 export type ChangePasswordInput = z.infer<typeof changePasswordSchema>;
 export type AdminListUsersInput = z.infer<typeof adminListUsersSchema>;
 export type AdminUpdateUserRoleInput = z.infer<typeof adminUpdateUserRoleSchema>;
+export type AdminUpdateRoleBody = z.infer<typeof adminUpdateRoleBodySchema>;
+export type AdminDisableUserInput = z.infer<typeof adminDisableUserSchema>;

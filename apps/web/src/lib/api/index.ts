@@ -1,3 +1,4 @@
 export { withHandler, withPublicHandler, jsonOk, jsonAccepted, jsonCreated } from "./handler.js";
 export type { HandlerContext, UnauthenticatedHandlerContext } from "./handler.js";
 export { isMinPlan, roleToPlanTier } from "./plan.js";
+export { requireAdmin } from "./admin.js";

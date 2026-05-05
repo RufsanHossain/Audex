@@ -103,7 +103,9 @@ export type {
 
 // ── User Schemas ────────────────────────────────────────────────────────────
 export {
+  adminDisableUserSchema,
   adminListUsersSchema,
+  adminUpdateRoleBodySchema,
   adminUpdateUserRoleSchema,
   changePasswordSchema,
   forgotPasswordSchema,
@@ -115,7 +117,9 @@ export {
   updateSettingsSchema,
 } from "./user.js";
 export type {
+  AdminDisableUserInput,
   AdminListUsersInput,
+  AdminUpdateRoleBody,
   AdminUpdateUserRoleInput,
   ChangePasswordInput,
   ForgotPasswordInput,
@@ -140,6 +144,10 @@ export type {
   RevokeApiKeyInput,
   UpdateApiKeyInput,
 } from "./api-key.js";
+
+// ── Admin Schemas ───────────────────────────────────────────────────────────
+export { dlqJobActionSchema, dlqQueueSchema, listDlqJobsSchema } from "./admin.js";
+export type { DlqJobActionInput, DlqQueue, ListDlqJobsInput } from "./admin.js";
 
 // ── Billing Schemas ─────────────────────────────────────────────────────────
 export { checkoutSchema } from "./billing.js";
