@@ -93,6 +93,14 @@ export const compareAuditsSchema = z.object({
   compareAuditId: objectIdSchema,
 });
 
+// ── Share Report ────────────────────────────────────────────────────────────
+
+export const shareReportSchema = z.object({
+  // Public reports are listed (e.g. could be indexed); unlisted are
+  // accessible by anyone with the link but not advertised.
+  access: z.enum(["public", "unlisted"]),
+});
+
 // ── Type Exports ────────────────────────────────────────────────────────────
 
 export type CreateUrlAuditInput = z.infer<typeof createUrlAuditSchema>;
@@ -104,3 +112,4 @@ export type CancelAuditInput = z.infer<typeof cancelAuditSchema>;
 export type RetryAuditInput = z.infer<typeof retryAuditSchema>;
 export type ExportReportInput = z.infer<typeof exportReportSchema>;
 export type CompareAuditsInput = z.infer<typeof compareAuditsSchema>;
+export type ShareReportInput = z.infer<typeof shareReportSchema>;

@@ -72,6 +72,7 @@ export {
   getAuditParamsSchema,
   listAuditsSchema,
   retryAuditSchema,
+  shareReportSchema,
 } from "./audit.js";
 export type {
   CancelAuditInput,
@@ -83,6 +84,7 @@ export type {
   GetAuditParams,
   ListAuditsInput,
   RetryAuditInput,
+  ShareReportInput,
 } from "./audit.js";
 
 // ── Project Schemas ─────────────────────────────────────────────────────────
