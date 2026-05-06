@@ -5,10 +5,12 @@ import { NextResponse } from "next/server";
 import { withPublicHandler } from "../../../../lib/api/index.js";
 import { buildOpenApiDoc } from "../../../../lib/openapi/spec.js";
 
-// Pure JSON serialization — no DB or Redis. Cache so subsequent fetches
-// don't rebuild the document.
+// Built on first request, then cached in-process for the lifetime of the
+// node. Marked dynamic because force-static triggers a prerender during
+// `next build`, and OpenApiGeneratorV31 crashes on Zod's private state
+// when invoked from the build worker.
 export const runtime = "nodejs";
-export const dynamic = "force-static";
+export const dynamic = "force-dynamic";
 
 let cached: unknown = null;
 

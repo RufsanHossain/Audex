@@ -5,7 +5,8 @@ import { NextResponse } from "next/server";
 import { withPublicHandler } from "../../../lib/api/index.js";
 
 export const runtime = "nodejs";
-export const dynamic = "force-static";
+// Match openapi.json — both routes are 404'd in production anyway.
+export const dynamic = "force-dynamic";
 
 // Swagger UI from unpkg — keeps the bundle out of the production app.
 const SWAGGER_CSS = "https://unpkg.com/swagger-ui-dist@5/swagger-ui.css";
