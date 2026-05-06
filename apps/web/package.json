@@ -12,6 +12,7 @@
     "test:integration": "vitest run"
   },
   "dependencies": {
+    "@asteasolutions/zod-to-openapi": "^7.3.4",
     "@audex/auth": "workspace:*",
     "@audex/db": "workspace:*",
     "@audex/env": "workspace:*",
