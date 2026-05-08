@@ -1,6 +1,7 @@
 import { extractAuth } from "@audex/auth";
 import { checkApiRateLimit, createRequestLogger, rateLimitHeaders } from "@audex/infra";
 import { ApiError } from "@audex/validators";
+import * as Sentry from "@sentry/nextjs";
 import { NextResponse } from "next/server";
 import { ZodError } from "zod";
 
@@ -239,6 +240,14 @@ export function withPublicHandler<
 
 // ─── Error Handler ─────────────────────────────────────────────────────────
 
+function reportToSentry(err: unknown, requestId: string, extra?: Record<string, unknown>): void {
+  Sentry.withScope((scope) => {
+    scope.setTag("request_id", requestId);
+    if (extra) scope.setContext("api", extra);
+    Sentry.captureException(err);
+  });
+}
+
 function handleError(err: unknown, requestId: string, log: Logger): NextResponse {
   // Known: ApiError → standardized response
   if (ApiError.isApiError(err)) {
@@ -246,7 +255,7 @@ function handleError(err: unknown, requestId: string, log: Logger): NextResponse
       log.info({ code: err.code, status: err.statusCode }, err.message);
     } else {
       log.error({ err, code: err.code }, err.message);
-      // TODO: report to Sentry once integrated (Step 49)
+      reportToSentry(err, requestId, { code: err.code, status: err.statusCode });
     }
     const res = NextResponse.json(err.toJSON(), { status: err.statusCode });
     res.headers.set("x-request-id", requestId);
@@ -264,7 +273,7 @@ function handleError(err: unknown, requestId: string, log: Logger): NextResponse
 
   // Unknown: log + generic 500
   log.error({ err }, "Unhandled error in API route");
-  // TODO: report to Sentry once integrated (Step 49)
+  reportToSentry(err, requestId, { kind: "unhandled" });
   const internal = ApiError.internal();
   const res = NextResponse.json(internal.toJSON(), { status: internal.statusCode });
   res.headers.set("x-request-id", requestId);

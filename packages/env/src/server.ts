@@ -70,6 +70,11 @@ const serverEnvBaseSchema = z.object({
 
   // ── Monitoring ──────────────────────────────────────────────────────────
   SENTRY_DSN: optionalString,
+  // Build-time only — used by @sentry/nextjs to upload source maps. Safe
+  // to leave unset locally; uploads silently skip.
+  SENTRY_AUTH_TOKEN: optionalString,
+  SENTRY_ORG: optionalString,
+  SENTRY_PROJECT: optionalString,
   POSTHOG_API_KEY: optionalString,
   POSTHOG_HOST: z.string().default("https://us.i.posthog.com"),
 

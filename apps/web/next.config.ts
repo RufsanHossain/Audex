@@ -1,3 +1,5 @@
+import { withSentryConfig } from "@sentry/nextjs";
+
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
@@ -75,4 +77,20 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
+// Wrap with Sentry to upload source maps + tunnel /monitoring traffic
+// past ad-blockers. All Sentry options are no-ops when env is unset, so
+// dev builds without Sentry env vars succeed silently.
+export default withSentryConfig(nextConfig, {
+  org: process.env["SENTRY_ORG"],
+  project: process.env["SENTRY_PROJECT"],
+  authToken: process.env["SENTRY_AUTH_TOKEN"],
+  // Source map upload is opt-in via SENTRY_AUTH_TOKEN.
+  silent: !process.env["CI"],
+  // Tunnel browser SDK requests through this app to dodge ad-blockers.
+  // Falls back to default Sentry endpoints when DSN is unset.
+  tunnelRoute: "/monitoring",
+  // Hide source maps from public production bundles after upload —
+  // Sentry still has them via the upload, browsers don't.
+  sourcemaps: { deleteSourcemapsAfterUpload: true },
+  disableLogger: true,
+});

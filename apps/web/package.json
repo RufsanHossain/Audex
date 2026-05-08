@@ -21,6 +21,7 @@
     "@audex/types": "workspace:*",
     "@audex/ui": "workspace:*",
     "@audex/validators": "workspace:*",
+    "@sentry/nextjs": "^10.52.0",
     "next": "catalog:",
     "next-auth": "catalog:",
     "react": "catalog:",
